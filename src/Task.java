@@ -3,7 +3,7 @@ import java.util.*;
 public class Task {
     protected String name;
     protected String description;
-    protected int id;                                           //Пускай это будет и id задачи, и хэш-кодом
+    private int id;                                           //Пускай это будет и id задачи, и хэш-кодом
     protected String status;
 
     public Task(String name, String description, String status)
@@ -18,8 +18,32 @@ public class Task {
     }
 
     @Override
+    public String toString() {
+        System.out.println("Task{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", id=" + id +
+                ", status='" + status + '\'' +
+                '}');
+        return "Task{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", id=" + id +
+                ", status='" + status + '\'' +
+                '}';
+    }
+
+    @Override
     public int hashCode() {
         return id;                                              // возвращаем хеш
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        if(status != null)
+            this.status = status;
+    }
 }

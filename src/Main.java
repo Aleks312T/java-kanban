@@ -5,7 +5,7 @@ public class Main {
     public static void main(String[] args) {
         // Поехали!
         Scanner scanner = new Scanner(System.in);
-
+        TaskManager taskManager = new TaskManager();
         System.out.println("Приветствую!\n");
         int exit = 0;
         while(exit == 0)
@@ -15,21 +15,77 @@ public class Main {
                 case(1):
                 {
                     System.out.println("Выбрана команда 1");
+                    System.out.println("Введите имя");
+                    String name = scanner.nextLine();
+
+                    System.out.println("Введите описание");
+                    String description = scanner.nextLine();
+
+                    System.out.println("Введите статус");
+                    System.out.println("1 - NEW; 2 - IN_PROGRESS; 3 - DONE");
+                    int input = scanner.nextInt();
+                    String status;
+                    switch (input) {
+                        case 1: {
+                            status = "NEW";
+                            break;
+                        }
+                        case 2: {
+                            status = "IN_PROGRESS";
+                            break;
+                        }
+                        case 3: {
+                            status = "DONE";
+                            break;
+                        }
+                        default:
+                            status = "";
+                    }
+
+                    System.out.println("Введите тип задачи (Task; Epic; SubTask)");
+                    System.out.println("1 - Task; 2 - Epic; 3 - SubTask");
+                    input = scanner.nextInt();
+                    String type;
+                    switch (input) {
+                        case 1: {
+                            type = "Task";
+                            break;
+                        }
+                        case 2: {
+                            type = "Epic";
+                            break;
+                        }
+                        case 3: {
+                            type = "SubTask";
+                            break;
+                        }
+                        default:
+                            type = "";
+                    }
+
+                    taskManager.addTask(name, description, status, type);
                     break;
                 }
                 case(2):
                 {
                     System.out.println("Выбрана команда 2");
+                    System.out.println("Вывести все NEW задачи");
+                    taskManager.printNewTasks();
                     break;
                 }
                 case(3):
                 {
                     System.out.println("Выбрана команда 3");
+                    System.out.println("Вывести все IN_PROGRESS задачи");
+                    taskManager.printInProgressTasks();
+
                     break;
                 }
                 case(4):
                 {
-                    System.out.println("Выбрана команда 4");
+                    System.out.println("Выбрана команда 5");
+                    System.out.println("Вывести все DONE задачи");
+                    taskManager.printDoneTasks();
                     break;
                 }
                 case(5):
@@ -55,10 +111,10 @@ public class Main {
         while(true)
         {
             System.out.println("Какая команда вас интересует?");
-            System.out.println("1 - ");
-            System.out.println("2 - ");
-            System.out.println("3 - ");
-            System.out.println("4 - ");
+            System.out.println("1 - Добавление задачи");
+            System.out.println("2 - Вывести все NEW задачи");
+            System.out.println("3 - Вывести все IN_PROGRESS задачи");
+            System.out.println("4 - Вывести все DONE задачи");
             System.out.println("5 - ");
             System.out.println("0 - Выход из программы");
             System.out.print("Введите комманду: ");
