@@ -13,10 +13,8 @@ public class TaskManager
 
     public void addTask(String name, String description, String status, String type)
     {
-        if(name == null || description == null || status == null || type == null)
-            return;
-        if(name.equals("") || description.equals("") || status.equals("") || type.equals(""))
-            return;
+        if(name == null || description == null || status == null || type == null)            return;
+        //if(name.equals("") || description.equals("") || status.equals("") || type.equals(""))            return;
 
         switch (type) {
             case "Task": {
@@ -66,11 +64,11 @@ public class TaskManager
         for(Integer code : newTasks)
         {
             if(tasks.containsKey(code))
-                tasks.get(code).toString();
+                System.out.println(tasks.get(code).toString());
             if(epics.containsKey(code))
-                epics.get(code).toString();
+                System.out.println(epics.get(code).toString());
             if(subTasks.containsKey(code))
-                subTasks.get(code).toString();
+                System.out.println(subTasks.get(code).toString());
         }
     }
 
@@ -79,11 +77,11 @@ public class TaskManager
         for(Integer code : inProgressTasks)
         {
             if(tasks.containsKey(code))
-                tasks.get(code).toString();
+                System.out.println(tasks.get(code).toString());
             if(epics.containsKey(code))
-                epics.get(code).toString();
+                System.out.println(epics.get(code).toString());
             if(subTasks.containsKey(code))
-                subTasks.get(code).toString();
+                System.out.println(subTasks.get(code).toString());
         }
     }
 
@@ -92,11 +90,11 @@ public class TaskManager
         for(Integer code : doneTasks)
         {
             if(tasks.containsKey(code))
-                tasks.get(code).toString();
+                System.out.println(tasks.get(code).toString());
             if(epics.containsKey(code))
-                epics.get(code).toString();
+                System.out.println(epics.get(code).toString());
             if(subTasks.containsKey(code))
-                subTasks.get(code).toString();
+                System.out.println(subTasks.get(code).toString());
         }
     }
 }

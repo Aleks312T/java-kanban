@@ -8,6 +8,7 @@ public class Main {
         TaskManager taskManager = new TaskManager();
         System.out.println("Приветствую!\n");
         int exit = 0;
+        int flag = 0;
         while(exit == 0)
         {
             int command = DoCommand();
@@ -16,7 +17,16 @@ public class Main {
                 {
                     System.out.println("Выбрана команда 1");
                     System.out.println("Введите имя");
-                    String name = scanner.nextLine();
+                    String name;
+                    if(flag == 0)
+                    {
+                        /*У меня какой-то странный баг, не идет считывание имени после первой задачи
+                        а без корректного имени сложно дебажить кое-какие части.
+                        * не могу понять с чем это связано, пока исправил вот так. */
+                        name = scanner.nextLine();
+                        flag = 1;
+                    }
+                    name = scanner.nextLine();
 
                     System.out.println("Введите описание");
                     String description = scanner.nextLine();

@@ -19,12 +19,7 @@ public class Task {
 
     @Override
     public String toString() {
-        System.out.println("Task{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", id=" + id +
-                ", status='" + status + '\'' +
-                '}');
+
         return "Task{" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
