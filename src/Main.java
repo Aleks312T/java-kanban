@@ -97,18 +97,37 @@ public class Main {
                 case(3):
                 {
                     System.out.println("Выбрана команда 3");
-                    System.out.println("Удалить все задачи (не сделано)");
-
+                    System.out.println("Удалить все задачи");
+                    System.out.println();
+                    System.out.println("Вы уверены, что хотите удалить все задачи?");
+                    System.out.print("Введите 1 для подтверждения: ");
+                    int input = scanner.nextInt();
+                    if(input == 1)
+                    {
+                        taskManager.deleteAllTasks();
+                        System.out.println("Все задачи удалены");
+                    }
                     break;
                 }
                 case(4):
                 {
                     System.out.println("Выбрана команда 4");
+                    System.out.println("Получение по идентификатору");
+                    System.out.println();
+                    System.out.print("Введите код задачи: ");
+                    int id = scanner.nextInt();
+                    Task demandedTask = taskManager.returnTask(id);
+                    System.out.print(demandedTask.toString());
                     break;
                 }
                 case(5):
                 {
                     System.out.println("Выбрана команда 5");
+                    System.out.println("Удаление по идентификатору");
+                    System.out.println();
+                    System.out.print("Введите код задачи: ");
+                    int id = scanner.nextInt();
+                    taskManager.deleteTask(id);
                     break;
                 }
                 case(0):
@@ -128,12 +147,13 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         while(true)
         {
+            System.out.println();
             System.out.println("Какая команда вас интересует?");
             System.out.println("1 - Добавление задачи");
             System.out.println("2 - Вывести все задачи");
             System.out.println("3 - Удалить все задачи");
-            System.out.println("4 - ");
-            System.out.println("5 - ");
+            System.out.println("4 - Получение по идентификатору");
+            System.out.println("5 - Удаление по идентификатору");
             System.out.println("0 - Выход из программы");
             System.out.print("Введите комманду: ");
             command = scanner.nextLine();                       //Сделано с целью конвертации ввода из строки
