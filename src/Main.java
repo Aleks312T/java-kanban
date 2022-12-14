@@ -23,8 +23,11 @@ public class Main {
                         /*У меня какой-то странный баг, не идет считывание имени после первой задачи
                         а без корректного имени сложно дебажить кое-какие части.
                         * не могу понять с чем это связано, пока исправил вот так. */
-                        name = scanner.nextLine();
                         flag = 1;
+                    } else
+                    {
+                        //System.out.println("ПРОВЕРКА БАГА С NAME - БАГ ВСЕ ЕЩЕ ЕСТЬ");
+                        name = scanner.nextLine();
                     }
                     name = scanner.nextLine();
 
@@ -55,47 +58,52 @@ public class Main {
                     System.out.println("Введите тип задачи (Task; Epic; SubTask)");
                     System.out.println("1 - Task; 2 - Epic; 3 - SubTask");
                     input = scanner.nextInt();
-                    String type;
                     switch (input) {
                         case 1: {
-                            type = "Task";
+                            Task newTask = new Task(name, description, status);
+                            taskManager.addTask(newTask);
                             break;
                         }
                         case 2: {
-                            type = "Epic";
+                            Epic newTask = new Epic(name, description, status);
+                            taskManager.addTask(newTask);
                             break;
                         }
                         case 3: {
-                            type = "SubTask";
+                            SubTask newTask = new SubTask(name, description, status);
+                            taskManager.addTask(newTask);
                             break;
                         }
                         default:
-                            type = "";
+                            System.out.println("Некорректный тип задачи");
                     }
-
-                    taskManager.addTask(name, description, status, type);
                     break;
                 }
                 case(2):
                 {
                     System.out.println("Выбрана команда 2");
-                    System.out.println("Вывести все NEW задачи");
+                    System.out.println("Вывести все задачи");
+
+                    System.out.println("\nNew задачи:");
                     taskManager.printNewTasks();
+
+                    System.out.println("\nInProgress задачи:");
+                    taskManager.printInProgressTasks();
+
+                    System.out.println("\nDone задачи:");
+                    taskManager.printDoneTasks();
                     break;
                 }
                 case(3):
                 {
                     System.out.println("Выбрана команда 3");
-                    System.out.println("Вывести все IN_PROGRESS задачи");
-                    taskManager.printInProgressTasks();
+                    System.out.println("Удалить все задачи (не сделано)");
 
                     break;
                 }
                 case(4):
                 {
-                    System.out.println("Выбрана команда 5");
-                    System.out.println("Вывести все DONE задачи");
-                    taskManager.printDoneTasks();
+                    System.out.println("Выбрана команда 4");
                     break;
                 }
                 case(5):
@@ -122,9 +130,9 @@ public class Main {
         {
             System.out.println("Какая команда вас интересует?");
             System.out.println("1 - Добавление задачи");
-            System.out.println("2 - Вывести все NEW задачи");
-            System.out.println("3 - Вывести все IN_PROGRESS задачи");
-            System.out.println("4 - Вывести все DONE задачи");
+            System.out.println("2 - Вывести все задачи");
+            System.out.println("3 - Удалить все задачи");
+            System.out.println("4 - ");
             System.out.println("5 - ");
             System.out.println("0 - Выход из программы");
             System.out.print("Введите комманду: ");

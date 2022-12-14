@@ -1,6 +1,7 @@
 import java.util.*;
 
 public class Task {
+    public static final String type = "Task";
     protected String name;
     protected String description;
     private int id;                                           //Пускай это будет и id задачи, и хэш-кодом
