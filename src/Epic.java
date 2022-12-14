@@ -9,7 +9,7 @@ public class Epic extends Task
         super(name, description, status);
     }
 
-    ArrayList <SubTask> subTasks = new ArrayList<>();
+    protected ArrayList <SubTask> subTasks = new ArrayList<>();
 
     public void changeStatus()
     {
@@ -36,6 +36,20 @@ public class Epic extends Task
             this.status = "DONE";
         else
             this.status = "IN_PROGRESS";                                    //Ситуация, когда только NEW и DONE
+    }
+
+    public void addSubTask(SubTask subTask)
+    {
+        if(subTask != null)
+        {
+            subTasks.add(subTask);
+            this.changeStatus();
+        }
+    }
+
+    public ArrayList <SubTask> getSubTasks()
+    {
+        return subTasks;
     }
 
     @Override

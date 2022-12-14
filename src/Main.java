@@ -70,8 +70,21 @@ public class Main {
                             break;
                         }
                         case 3: {
-                            SubTask newTask = new SubTask(name, description, status);
-                            taskManager.addTask(newTask);
+                            if(taskManager.countEpics() > 0)
+                            {
+                                System.out.print("Введите код Epic задачи: ");
+                                int id = scanner.nextInt();
+                                if(taskManager.containEpic(id))
+                                {
+                                    SubTask newTask = new SubTask(name, description, status, id);
+                                    taskManager.addTask(newTask);
+                                } else
+                                    System.out.print("Ошибка, такого эпика нет");
+
+                            } else
+                            {
+                                System.out.print("Невозможно создать, т.к. нет Epic задач");
+                            }
                             break;
                         }
                         default:
@@ -130,6 +143,27 @@ public class Main {
                     taskManager.deleteTask(id);
                     break;
                 }
+                case(6):
+                {
+                    System.out.println("Выбрана команда 6");
+                    System.out.println("Получение листа задач одного эпика");
+                    System.out.println();
+                    System.out.print("Введите код эпика: ");
+                    int id = scanner.nextInt();
+                    if(taskManager.containEpic(id))
+                    {
+                        ArrayList <SubTask> result = taskManager.findSubTasks(id);
+                        if(result.size() == 0)
+                            System.out.print("У данного эпика нет подзадач");
+                        else
+                            for(SubTask subTask : result)
+                                System.out.println(subTask.toString());
+                    } else
+                    {
+                        System.out.println("Такого эпика нет");
+                    }
+                    break;
+                }
                 case(0):
                 {
                     exit = 1;
@@ -154,6 +188,7 @@ public class Main {
             System.out.println("3 - Удалить все задачи");
             System.out.println("4 - Получение по идентификатору");
             System.out.println("5 - Удаление по идентификатору");
+            System.out.println("6 - Получение листа задач одного эпика");
             System.out.println("0 - Выход из программы");
             System.out.print("Введите комманду: ");
             command = scanner.nextLine();                       //Сделано с целью конвертации ввода из строки
@@ -168,6 +203,8 @@ public class Main {
                     return 4;
                 case  ("5"):
                     return 5;
+                case  ("6"):
+                    return 6;
                 case  ("0"):
                     return 0;
                 default:
