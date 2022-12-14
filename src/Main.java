@@ -6,7 +6,8 @@ public class Main {
         // Поехали!
         Scanner scanner = new Scanner(System.in);
         TaskManager taskManager = new TaskManager();
-        System.out.println("Приветствую!\n");
+        System.out.println("Приветствую!");
+        System.out.println();
         int exit = 0;
         int flag = 0;
         while(exit == 0)
@@ -20,9 +21,10 @@ public class Main {
                     String name;
                     if(flag == 0)
                     {
-                        /*У меня какой-то странный баг, не идет считывание имени после первой задачи
-                        а без корректного имени сложно дебажить кое-какие части.
-                        * не могу понять с чем это связано, пока исправил вот так. */
+                        /*У меня какой-то странный баг, не идет считывание имени после первой задачи,
+                        а без корректного имени сложно отлаживать кое-какие части.
+                        * Не могу понять с чем это связано, пока исправил вот так. */
+                        //У вас есть предположение, с чем это связано?, у меня именно так все работает как надо
                         flag = 1;
                     } else
                     {
@@ -96,14 +98,14 @@ public class Main {
                 {
                     System.out.println("Выбрана команда 2");
                     System.out.println("Вывести все задачи");
-
-                    System.out.println("\nNew задачи:");
+                    System.out.println();
+                    System.out.println("New задачи:");
                     taskManager.printNewTasks();
-
-                    System.out.println("\nInProgress задачи:");
+                    System.out.println();
+                    System.out.println("InProgress задачи:");
                     taskManager.printInProgressTasks();
-
-                    System.out.println("\nDone задачи:");
+                    System.out.println();
+                    System.out.println("Done задачи:");
                     taskManager.printDoneTasks();
                     break;
                 }
@@ -164,6 +166,14 @@ public class Main {
                     }
                     break;
                 }
+                case(7):
+                {
+                    System.out.println("Выбрана команда 2");
+                    System.out.println("Вывести все по кодам");
+
+                    taskManager.printAllCodes();
+                    break;
+                }
                 case(0):
                 {
                     exit = 1;
@@ -189,8 +199,9 @@ public class Main {
             System.out.println("4 - Получение по идентификатору");
             System.out.println("5 - Удаление по идентификатору");
             System.out.println("6 - Получение листа задач одного эпика");
+            System.out.println("7 - Вывести все идентификаторы задач");
             System.out.println("0 - Выход из программы");
-            System.out.print("Введите комманду: ");
+            System.out.print("Введите команду: ");
             command = scanner.nextLine();                       //Сделано с целью конвертации ввода из строки
             switch (command) {                                  //в обычное число в обход возможных ошибок
                 case  ("1"):
@@ -205,6 +216,8 @@ public class Main {
                     return 5;
                 case  ("6"):
                     return 6;
+                case  ("7"):
+                    return 7;
                 case  ("0"):
                     return 0;
                 default:

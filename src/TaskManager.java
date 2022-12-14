@@ -3,25 +3,25 @@ import java.util.HashMap;
 
 public class TaskManager
 {
-    protected HashMap <Integer, Task> tasks = new HashMap<>();                //Можно было бы и в ArrayList засунуть
-    protected HashMap <Integer, Epic> epics = new HashMap<>();                //Но тогда достается не очень быстро
-    protected HashMap <Integer, SubTask> subTasks = new HashMap<>();
+    private final HashMap <Integer, Task> tasks = new HashMap<>();                //Можно было бы и в ArrayList засунуть
+    private final HashMap <Integer, Epic> epics = new HashMap<>();                //Но тогда достается не очень быстро
+    private final HashMap <Integer, SubTask> subTasks = new HashMap<>();
 
-    protected ArrayList<Integer> newTasks = new ArrayList<>();                //Не уверен, что стоит дублировать
-    protected ArrayList<Integer> inProgressTasks = new ArrayList<>();         //Но, наверно, лучше потратить память
-    protected ArrayList<Integer> doneTasks = new ArrayList<>();               //Чем быстродействие
+    protected ArrayList<Integer> newTasks = new ArrayList<>();          //Не уверен, что стоит дублировать
+    protected ArrayList<Integer> inProgressTasks = new ArrayList<>();   //Но, наверно, лучше потратить память
+    protected ArrayList<Integer> doneTasks = new ArrayList<>();         //Чем быстродействие
 
     public void addTask(Task newTask)
     {
-        if(newTask.name == null || newTask.description == null || newTask.status == null)
+        if(newTask.getName() == null || newTask.getDescription() == null || newTask.status == null)
             return;
-        if(newTask.name.equals("") || newTask.status.equals(""))
+        if(newTask.getName().equals("") || newTask.status.equals(""))
             return;
 
         if(!tasks.containsKey(newTask.hashCode()))
         {
             tasks.put(newTask.hashCode(), newTask);
-            addToList(newTask.status, newTask.hashCode());
+            addToList(newTask);
         }
         else
         {
@@ -29,26 +29,25 @@ public class TaskManager
             if(!oldTask.status.equals(newTask.status))                  //Проверка на изменение статуса
             {
                 //Тут я убираю хэшкод из листа со старым статусом, и добавляю в лист с новым
-                removeFromList(oldTask.status, oldTask.hashCode());
-                addToList(newTask.status, newTask.hashCode());
+                removeFromList(oldTask);
+                addToList(newTask);
             }
             tasks.replace(newTask.hashCode(), newTask);
         }
     }
 
-    public void addTask(Epic newTask)                                //Решил вынести отдельную версию с Epic
+    public void addTask(Epic newTask)                                   //Решил вынести отдельную версию с Epic
     {
-        if(newTask.name == null || newTask.description == null || newTask.status == null)
+        if(newTask.getName() == null || newTask.getDescription() == null || newTask.status == null)
             return;
-        if(newTask.name.equals("") || newTask.status.equals(""))
+        if(newTask.getName().equals("") || newTask.status.equals(""))
             return;
 
-        System.out.print("Добавляю Epic");
-        Epic newEpic = new Epic(newTask.name, newTask.description, newTask.status);
+        Epic newEpic = new Epic(newTask.getName(), newTask.getDescription(), newTask.status);
         if(!epics.containsKey(newTask.hashCode()))
         {
             epics.put(newTask.hashCode(), newEpic);
-            addToList(newTask.status, newTask.hashCode());
+            addToList(newTask);
         }
         else
         {
@@ -56,8 +55,8 @@ public class TaskManager
             if(!oldTask.status.equals(newTask.status))                  //Проверка на изменение статуса
             {
                 //Тут я убираю хэшкод из листа со старым статусом, и добавляю в лист с новым
-                removeFromList(oldTask.status, oldTask.hashCode());
-                addToList(newTask.status, newTask.hashCode());
+                removeFromList(oldTask);
+                addToList(newTask);
             }
             epics.replace(newTask.hashCode(), newEpic);
         }
@@ -65,37 +64,32 @@ public class TaskManager
 
     public void addTask(SubTask newTask)                                //Решил вынести отдельную версию с SubTask
     {
-        if(newTask.name == null || newTask.description == null || newTask.status == null)
+        if(newTask.getName() == null || newTask.getDescription() == null || newTask.status == null)
             return;
-        if(newTask.name.equals("") || newTask.status.equals(""))
+        if(newTask.getName().equals("") || newTask.status.equals(""))
             return;
 
         //Добавляю в эпик подзадачу
-        String epicOldStatus = "";
-        String epicNewStatus = "";
-        int epicCode = 0;                                               //Чтобы компилятор дальше не ругался
         for(Integer code : epics.keySet())
         {
             if(code == newTask.parent)
             {
-                epicOldStatus = epics.get(code).status;
-                epics.get(code).addSubTask(newTask);
-                epicNewStatus = epics.get(code).status;
-                epicCode = code;
+                Epic oldEpic = epics.get(code);
+                removeFromList(oldEpic);
+
+                epics.get(code).addSubTask(newTask);                    //Здесь, в том числе происходит смена типа эпика
+
+                Epic newEpic = epics.get(code);
+                addToList(newEpic);
                 break;
             }
         }
 
-        if(!epicOldStatus.equals(epicNewStatus))                        //Изменение статуса Epic в самом taskManager
-        {
-            removeFromList(epicOldStatus, epicCode);
-            addToList(epicNewStatus, epicCode);
-        }
 
         if(!subTasks.containsKey(newTask.hashCode()))
         {
             subTasks.put(newTask.hashCode(), newTask);
-            addToList(newTask.status, newTask.hashCode());
+            addToList(newTask);
         }
         else
         {
@@ -103,8 +97,8 @@ public class TaskManager
             if(!oldTask.status.equals(newTask.status))                  //Проверка на изменение статуса
             {
                 //Тут я убираю хэшкод из листа со старым статусом, и добавляю в лист с новым
-                removeFromList(oldTask.status, oldTask.hashCode());
-                addToList(newTask.status, newTask.hashCode());
+                removeFromList(oldTask);
+                addToList(newTask);
             }
             subTasks.replace(newTask.hashCode(), newTask);
         }
@@ -135,45 +129,45 @@ public class TaskManager
     {
         if(tasks.containsKey(id))
         {
-            removeFromList(tasks.get(id).status, tasks.get(id).hashCode());
+            removeFromList(tasks.get(id));
             tasks.remove(id);
         } else
         if(epics.containsKey(id))
         {
-            removeFromList(epics.get(id).status, epics.get(id).hashCode());
+            removeFromList(epics.get(id));
             epics.remove(id);
         } else
         if(subTasks.containsKey(id))
         {
-            removeFromList(subTasks.get(id).status, subTasks.get(id).hashCode());
+            removeFromList(subTasks.get(id));
             subTasks.remove(id);
         }
     }
-
-    private void addToList(String status, int code)                 //Добавление в списки new, inProgress и done -Tasks
+    //Теперь на вход идет сама задача
+    private void addToList(Task task)                 //Добавление в списки new, inProgress и done -Tasks
     {
-        switch (status) {
+        switch (task.status) {
             case "NEW": {
-                newTasks.add(code);
+                newTasks.add(task.hashCode());
                 break;
             }
             case "IN_PROGRESS": {
-                inProgressTasks.add(code);
+                inProgressTasks.add(task.hashCode());
                 break;
             }
             case "DONE": {
-                doneTasks.add(code);
+                doneTasks.add(task.hashCode());
                 break;
             }
         }
     }
-
-    private void removeFromList(String status, int code)            //Удаление из списков new, inProgress и done -Tasks
+    //Теперь на вход идет сама задача
+    private void removeFromList(Task task)            //Удаление из списков new, inProgress и done -Tasks
     {
-        switch (status) {
+        switch (task.status) {
             case "NEW": {
                 for(int i = 0; i < newTasks.size(); ++i)
-                    if(newTasks.get(i) == code)
+                    if(newTasks.get(i) == task.hashCode())
                     {
                         newTasks.remove(i);
                         break;
@@ -182,7 +176,7 @@ public class TaskManager
             }
             case "IN_PROGRESS": {
                 for(int i = 0; i < inProgressTasks.size(); ++i)
-                    if(inProgressTasks.get(i) == code)
+                    if(inProgressTasks.get(i) == task.hashCode())
                     {
                         inProgressTasks.remove(i);
                         break;
@@ -191,7 +185,7 @@ public class TaskManager
             }
             case "DONE": {
                 for(int i = 0; i < doneTasks.size(); ++i)
-                    if(doneTasks.get(i) == code)
+                    if(doneTasks.get(i) == task.hashCode())
                     {
                         doneTasks.remove(i);
                         break;
@@ -217,8 +211,10 @@ public class TaskManager
         return parentEpic.getSubTasks();
     }
 
-    public void printNewTasks()                                                 //Вывод списка newTasks
+    public void printNewTasks()                                         //Вывод списка newTasks
     {
+        //В коде и правда некрасиво, но вывод получается информативный
+        //Поэтому решил оставить так
         for(Integer code : newTasks)
         {
             if(tasks.containsKey(code))
@@ -230,7 +226,7 @@ public class TaskManager
         }
     }
 
-    public void printInProgressTasks()                                          //Вывод списка inProgressTasks
+    public void printInProgressTasks()                                  //Вывод списка inProgressTasks
     {
         for(Integer code : inProgressTasks)
         {
@@ -243,7 +239,7 @@ public class TaskManager
         }
     }
 
-    public void printDoneTasks()                                                //Вывод списка doneTasks
+    public void printDoneTasks()                                        //Вывод списка doneTasks
     {
         for(Integer code : doneTasks)
         {
@@ -256,7 +252,7 @@ public class TaskManager
         }
     }
 
-    public void deleteAllTasks()                                                //Удаления ВСЕХ задач
+    public void deleteAllTasks()                                        //Удаления ВСЕХ задач
     {
         tasks.clear();
         epics.clear();
@@ -265,5 +261,21 @@ public class TaskManager
         newTasks.clear();
         inProgressTasks.clear();
         doneTasks.clear();
+    }
+
+    public void printAllCodes()
+    {
+        //Добавил этот метод для демонстрации исправления "Можно лучше"
+        System.out.println();
+        System.out.println("New задачи:");
+        System.out.println(newTasks);
+
+        System.out.println();
+        System.out.println("InProgress задачи:");
+        System.out.println(inProgressTasks);
+
+        System.out.println();
+        System.out.println("Done задачи:");
+        System.out.println(doneTasks);
     }
 }

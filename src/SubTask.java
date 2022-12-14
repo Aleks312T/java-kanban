@@ -14,8 +14,8 @@ public class SubTask extends Task
     public String toString() {
 
         return "SubTask{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
+                "name='" + this.getName() + '\'' +
+                ", description='" + this.getDescription() + '\'' +
                 ", id=" + this.hashCode() +
                 ", status='" + status + '\'' +
                 ", parent id='" + parent + '\'' +
