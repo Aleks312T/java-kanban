@@ -15,7 +15,8 @@ public class TaskManager
     {
         if(newTask.name == null || newTask.description == null || newTask.status == null)
             return;
-        //if(name.equals("") || description.equals("") || status.equals("") || type.equals(""))            return;
+        if(newTask.name.equals("") || newTask.status.equals(""))
+            return;
 
         switch (newTask.type) {
             case "Task": {
@@ -82,7 +83,47 @@ public class TaskManager
         }
     }
 
-    private void addToList(String status, int code)
+    public Task returnTask(int id)
+    {
+        Task result = new Task("", "", "");
+        if(tasks.containsKey(id))
+        {
+            result = tasks.get(id);
+            return result;
+        } else
+        if(epics.containsKey(id))
+        {
+            result = epics.get(id);
+            return result;
+        } else
+        if(subTasks.containsKey(id))
+        {
+            result = subTasks.get(id);
+            return result;
+        }
+        return result;                                              //Этот return не должен сработать, но нужна заглушка
+    }
+
+    public void deleteTask(int id)
+    {
+        if(tasks.containsKey(id))
+        {
+            removeFromList(tasks.get(id).status, tasks.get(id).hashCode());
+            tasks.remove(id);
+        } else
+        if(epics.containsKey(id))
+        {
+            removeFromList(epics.get(id).status, epics.get(id).hashCode());
+            epics.remove(id);
+        } else
+        if(subTasks.containsKey(id))
+        {
+            removeFromList(subTasks.get(id).status, subTasks.get(id).hashCode());
+            subTasks.remove(id);
+        }
+    }
+
+    private void addToList(String status, int code)                 //Добавление в списки new, inProgress и done -Tasks
     {
         switch (status) {
             case "NEW": {
@@ -100,7 +141,7 @@ public class TaskManager
         }
     }
 
-    private void removeFromList(String status, int code)
+    private void removeFromList(String status, int code)            //Удаление из списков new, inProgress и done -Tasks
     {
         switch (status) {
             case "NEW": {
@@ -124,7 +165,7 @@ public class TaskManager
         }
     }
 
-    public void printNewTasks()
+    public void printNewTasks()                                     //Вывод списка newTasks
     {
         for(Integer code : newTasks)
         {
@@ -137,7 +178,7 @@ public class TaskManager
         }
     }
 
-    public void printInProgressTasks()
+    public void printInProgressTasks()                              //Вывод списка inProgressTasks
     {
         for(Integer code : inProgressTasks)
         {
@@ -150,7 +191,7 @@ public class TaskManager
         }
     }
 
-    public void printDoneTasks()
+    public void printDoneTasks()                                    //Вывод списка doneTasks
     {
         for(Integer code : doneTasks)
         {
@@ -161,5 +202,16 @@ public class TaskManager
             if(subTasks.containsKey(code))
                 System.out.println(subTasks.get(code).toString());
         }
+    }
+
+    public void deleteAllTasks()                                    //Удаления ВСЕХ задач
+    {
+        tasks.clear();
+        epics.clear();
+        subTasks.clear();
+
+        newTasks.clear();
+        inProgressTasks.clear();
+        doneTasks.clear();
     }
 }
