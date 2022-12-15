@@ -3,9 +3,12 @@ import java.util.HashMap;
 
 public class TaskManager
 {
-    private final HashMap <Integer, Task> tasks = new HashMap<>();                //Можно было бы и в ArrayList засунуть
-    private final HashMap <Integer, Epic> epics = new HashMap<>();                //Но тогда достается не очень быстро
-    private final HashMap <Integer, SubTask> subTasks = new HashMap<>();
+    //Не очень хорошо понял тему полиморфизма, особенно встроенного в Java (кроме статического)
+    //Так что не уверен, что это нужно было сделать.
+    //(И по материалам из яндекса я так и не понял, в чем профит этой записи)
+    private final HashMap <Integer, Task> tasks = new LinkedHashMap<>();
+    private final HashMap <Integer, Epic> epics = new LinkedHashMap<>();
+    private final HashMap <Integer, SubTask> subTasks = new LinkedHashMap<>();
 
     protected ArrayList<Integer> newTasks = new ArrayList<>();          //Не уверен, что стоит дублировать
     protected ArrayList<Integer> inProgressTasks = new ArrayList<>();   //Но, наверно, лучше потратить память
