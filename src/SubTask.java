@@ -1,5 +1,4 @@
 import java.util.*;
-
 public class SubTask extends Task
 {
     public static final String type = "SubTask";

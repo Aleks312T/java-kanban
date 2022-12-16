@@ -5,7 +5,7 @@ public class Main {
     public static void main(String[] args) {
         // Поехали!
         Scanner scanner = new Scanner(System.in);
-        TaskManager taskManager = new TaskManager();
+        InMemoryTaskManager taskManager = new InMemoryTaskManager();
         System.out.println("Приветствую!");
         System.out.println();
         int exit = 0;
