@@ -6,6 +6,7 @@ public class Task {
     private String description;
     private int id;                                           //Пускай это будет и id задачи, и хэш-кодом
     protected String status;
+    protected Status enumStatus;
 
     public Task(String name, String description, String status)
     {

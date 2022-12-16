@@ -6,6 +6,8 @@ public class Main {
         // Поехали!
         Scanner scanner = new Scanner(System.in);
         InMemoryTaskManager taskManager = new InMemoryTaskManager();
+        TaskManager inMemoryTaskManager = Managers.getDefault();
+
         System.out.println("Приветствую!");
         System.out.println();
         int exit = 0;
@@ -24,7 +26,6 @@ public class Main {
                         /*У меня какой-то странный баг, не идет считывание имени после первой задачи,
                         а без корректного имени сложно отлаживать кое-какие части.
                         * Не могу понять с чем это связано, пока исправил вот так. */
-                        //У вас есть предположение, с чем это связано?, у меня именно так все работает как надо
                         flag = 1;
                     } else
                     {
@@ -40,17 +41,21 @@ public class Main {
                     System.out.println("1 - NEW; 2 - IN_PROGRESS; 3 - DONE");
                     int input = scanner.nextInt();
                     String status;
+                    Status enumStatus;
                     switch (input) {
                         case 1: {
                             status = "NEW";
+                            enumStatus = Status.NEW;
                             break;
                         }
                         case 2: {
                             status = "IN_PROGRESS";
+                            enumStatus = Status.IN_PROGRESS;
                             break;
                         }
                         case 3: {
                             status = "DONE";
+                            enumStatus = Status.DONE;
                             break;
                         }
                         default:
@@ -168,10 +173,17 @@ public class Main {
                 }
                 case(7):
                 {
-                    System.out.println("Выбрана команда 2");
+                    System.out.println("Выбрана команда 7");
                     System.out.println("Вывести все по кодам");
 
                     taskManager.printAllCodes();
+                    break;
+                }
+                case(8):
+                {
+                    System.out.println("Выбрана команда 8");
+                    System.out.println("8 - Вывести историю просмотров задач (не сделано)");
+
                     break;
                 }
                 case(0):
@@ -200,6 +212,7 @@ public class Main {
             System.out.println("5 - Удаление по идентификатору");
             System.out.println("6 - Получение листа задач одного эпика");
             System.out.println("7 - Вывести все идентификаторы задач");
+            System.out.println("8 - Вывести историю просмотров задач (не сделано)");
             System.out.println("0 - Выход из программы");
             System.out.print("Введите команду: ");
             command = scanner.nextLine();                       //Сделано с целью конвертации ввода из строки
@@ -218,6 +231,8 @@ public class Main {
                     return 6;
                 case  ("7"):
                     return 7;
+                case  ("8"):
+                    return 8;
                 case  ("0"):
                     return 0;
                 default:
