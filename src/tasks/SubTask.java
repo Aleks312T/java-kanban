@@ -1,7 +1,9 @@
-import java.util.*;
+package tasks;
+
+import main.Status;
+
 public class SubTask extends Task
 {
-    public static final String type = "SubTask";
     public int parent;
     public SubTask(String name, String description, Status status, int parent)
     {
@@ -12,7 +14,7 @@ public class SubTask extends Task
     @Override
     public String toString() {
 
-        return "SubTask{" +
+        return "tasks.SubTask{" +
                 "name='" + this.getName() + '\'' +
                 ", description='" + this.getDescription() + '\'' +
                 ", id=" + this.hashCode() +

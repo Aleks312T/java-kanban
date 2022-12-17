@@ -1,5 +1,8 @@
+package tasks;
+
 import java.util.*;
-import java.util.HashMap;
+
+import main.Status;
 
 public class Epic extends Task
 {
@@ -54,7 +57,7 @@ public class Epic extends Task
     @Override
     public String toString() {
 
-        return "Epic{" +
+        return "tasks.Epic{" +
                 "name='" + this.getName() + '\'' +
                 ", description='" + this.getDescription() + '\'' +
                 ", id=" + this.hashCode() +

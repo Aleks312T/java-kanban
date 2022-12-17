@@ -1,3 +1,8 @@
+package main;
+
+import managers.InMemoryTaskManager;
+import tasks.*;
+
 import java.util.*;
 
 public class Main {
@@ -74,7 +79,7 @@ public class Main {
                         case 3: {
                             if(taskManager.countEpics() > 0)
                             {
-                                System.out.print("Введите код Epic задачи: ");
+                                System.out.print("Введите код tasks.Epic задачи: ");
                                 int id = scanner.nextInt();
                                 if(taskManager.containEpic(id))
                                 {
@@ -85,7 +90,7 @@ public class Main {
 
                             } else
                             {
-                                System.out.print("Невозможно создать, т.к. нет Epic задач");
+                                System.out.print("Невозможно создать, т.к. нет tasks.Epic задач");
                             }
                             break;
                         }

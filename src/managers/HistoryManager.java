@@ -1,8 +1,10 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+package managers;
 
-interface HistoryManager
+import tasks.Task;
+
+import java.util.ArrayList;
+
+public interface HistoryManager
 {
     void add(Task Task);
 

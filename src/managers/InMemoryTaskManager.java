@@ -1,3 +1,8 @@
+package managers;
+
+import tasks.*;
+import main.Status;
+
 import java.util.*;
 import java.util.HashMap;
 
@@ -15,7 +20,7 @@ public class InMemoryTaskManager extends Managers implements TaskManager
 
     private void addToList(Task task)                 //Добавление в списки new, inProgress и done -Tasks
     {
-        switch (task.status) {
+        switch (task.getStatus()) {
             case NEW: {
                 newTasks.add(task.hashCode());
                 break;
@@ -33,7 +38,7 @@ public class InMemoryTaskManager extends Managers implements TaskManager
 
     private void removeFromList(Task task)            //Удаление из списков new, inProgress и done -Tasks
     {
-        switch (task.status) {
+        switch (task.getStatus()) {
             case NEW: {
                 for(int i = 0; i < newTasks.size(); ++i)
                     if(newTasks.get(i) == task.hashCode())
@@ -72,9 +77,9 @@ public class InMemoryTaskManager extends Managers implements TaskManager
     @Override
     public void addTask(Task newTask)
     {
-        if(newTask.getName() == null || newTask.getDescription() == null || newTask.status == null)
+        if(newTask.getName() == null || newTask.getDescription() == null || newTask.getStatus() == null)
             return;
-        if(newTask.getName().equals("") || newTask.status == Status.NONE)
+        if(newTask.getName().equals("") || newTask.getStatus() == Status.NONE)
             return;
 
         historyManager.add(newTask);
@@ -86,7 +91,7 @@ public class InMemoryTaskManager extends Managers implements TaskManager
         else
         {
             Task oldTask = tasks.get(newTask.hashCode());
-            if(oldTask.status != newTask.status)                  //Проверка на изменение статуса
+            if(oldTask.getStatus() != newTask.getStatus())                  //Проверка на изменение статуса
             {
                 //Тут я убираю хэшкод из листа со старым статусом, и добавляю в лист с новым
                 removeFromList(oldTask);
@@ -96,14 +101,14 @@ public class InMemoryTaskManager extends Managers implements TaskManager
         }
     }
     @Override
-    public void addTask(Epic newTask)                                   //Решил вынести отдельную версию с Epic
+    public void addTask(Epic newTask)                                   //Решил вынести отдельную версию с tasks.Epic
     {
-        if(newTask.getName() == null || newTask.getDescription() == null || newTask.status == null)
+        if(newTask.getName() == null || newTask.getDescription() == null || newTask.getStatus() == null)
             return;
-        if(newTask.getName().equals("") || newTask.status == Status.NONE)
+        if(newTask.getName().equals("") || newTask.getStatus() == Status.NONE)
             return;
 
-        Epic newEpic = new Epic(newTask.getName(), newTask.getDescription(), newTask.status);
+        Epic newEpic = new Epic(newTask.getName(), newTask.getDescription(), newTask.getStatus());
         historyManager.add(newEpic);
         if(!epics.containsKey(newTask.hashCode()))
         {
@@ -113,7 +118,7 @@ public class InMemoryTaskManager extends Managers implements TaskManager
         else
         {
             Task oldTask = epics.get(newTask.hashCode());
-            if(oldTask.status != newTask.status)                  //Проверка на изменение статуса
+            if(oldTask.getStatus() != newTask.getStatus())                  //Проверка на изменение статуса
             {
                 //Тут я убираю хэшкод из листа со старым статусом, и добавляю в лист с новым
                 removeFromList(oldTask);
@@ -123,11 +128,11 @@ public class InMemoryTaskManager extends Managers implements TaskManager
         }
     }
     @Override
-    public void addTask(SubTask newTask)                                //Решил вынести отдельную версию с SubTask
+    public void addTask(SubTask newTask)                                //Решил вынести отдельную версию с tasks.SubTask
     {
-        if(newTask.getName() == null || newTask.getDescription() == null || newTask.status == null)
+        if(newTask.getName() == null || newTask.getDescription() == null || newTask.getStatus() == null)
             return;
-        if(newTask.getName().equals("") || newTask.status == Status.NONE)
+        if(newTask.getName().equals("") || newTask.getStatus() == Status.NONE)
             return;
 
         //Добавляю в эпик подзадачу
@@ -155,7 +160,7 @@ public class InMemoryTaskManager extends Managers implements TaskManager
         else
         {
             Task oldTask = subTasks.get(newTask.hashCode());
-            if(oldTask.status != newTask.status)                  //Проверка на изменение статуса
+            if(oldTask.getStatus() != newTask.getStatus())                  //Проверка на изменение статуса
             {
                 //Тут я убираю хэшкод из листа со старым статусом, и добавляю в лист с новым
                 removeFromList(oldTask);
@@ -222,8 +227,6 @@ public class InMemoryTaskManager extends Managers implements TaskManager
     @Override
     public void printNewTasks()                                         //Вывод списка newTasks
     {
-        //В коде и правда некрасиво, но вывод получается информативный
-        //Поэтому решил оставить так
         for(Integer code : newTasks)
         {
             if(tasks.containsKey(code))

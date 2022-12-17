@@ -1,7 +1,9 @@
+package tasks;
+
 import java.util.Objects;
+import main.Status;
 
 public class Task {
-    public static final String type = "Task";
     private String name;
     private String description;
     private int id;                                           //Пускай это будет и id задачи, и хэш-кодом
@@ -47,7 +49,7 @@ public class Task {
     @Override
     public String toString() {
 
-        return "Task{" +
+        return "tasks.Task{" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", id=" + id +

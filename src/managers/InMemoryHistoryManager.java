@@ -1,3 +1,7 @@
+package managers;
+
+import tasks.Task;
+
 import java.util.ArrayList;
 
 public class InMemoryHistoryManager extends Managers implements HistoryManager

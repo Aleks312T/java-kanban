@@ -1,8 +1,12 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+package managers;
 
-interface TaskManager
+import tasks.Epic;
+import tasks.SubTask;
+import tasks.Task;
+
+import java.util.ArrayList;
+
+public interface TaskManager
 {
     void addTask(Task newTask);
 
