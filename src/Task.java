@@ -1,4 +1,4 @@
-import java.util.*;
+import java.util.Objects;
 
 public class Task {
     public static final String type = "Task";

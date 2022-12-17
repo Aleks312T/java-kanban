@@ -8,6 +8,8 @@ interface HistoryManager
 
     ArrayList <Task> getHistory();
 
+    int getMaxSize();
+
     static HistoryManager getDefaultHistory() {
         return new InMemoryHistoryManager();
     }

@@ -3,7 +3,6 @@ import java.util.HashMap;
 
 public class Epic extends Task
 {
-    public static final String type = "Epic";
     public Epic(String name, String description, Status status)
     {
         super(name, description, status);
