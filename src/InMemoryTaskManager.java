@@ -1,7 +1,7 @@
 import java.util.*;
 import java.util.HashMap;
 
-public class InMemoryTaskManager implements TaskManager
+public class InMemoryTaskManager extends Managers implements TaskManager
 {
     private final HashMap<Integer, Task> tasks = new LinkedHashMap<>();
     private final HashMap <Integer, Epic> epics = new LinkedHashMap<>();
@@ -10,6 +10,8 @@ public class InMemoryTaskManager implements TaskManager
     protected ArrayList<Integer> newTasks = new ArrayList<>();          //Не уверен, что стоит дублировать
     protected ArrayList<Integer> inProgressTasks = new ArrayList<>();   //Но, наверно, лучше потратить память
     protected ArrayList<Integer> doneTasks = new ArrayList<>();         //Чем быстродействие
+
+    InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
 
     private void addToList(Task task)                 //Добавление в списки new, inProgress и done -Tasks
     {
@@ -62,6 +64,11 @@ public class InMemoryTaskManager implements TaskManager
         }
     }
 
+    public List<Task> getHistory()
+    {
+        return historyManager.getHistory();
+    }
+
     @Override
     public void addTask(Task newTask)
     {
@@ -70,6 +77,7 @@ public class InMemoryTaskManager implements TaskManager
         if(newTask.getName().equals("") || newTask.status == Status.NONE)
             return;
 
+        historyManager.add(newTask);
         if(!tasks.containsKey(newTask.hashCode()))
         {
             tasks.put(newTask.hashCode(), newTask);
@@ -96,6 +104,7 @@ public class InMemoryTaskManager implements TaskManager
             return;
 
         Epic newEpic = new Epic(newTask.getName(), newTask.getDescription(), newTask.status);
+        historyManager.add(newEpic);
         if(!epics.containsKey(newTask.hashCode()))
         {
             epics.put(newTask.hashCode(), newEpic);
@@ -137,7 +146,7 @@ public class InMemoryTaskManager implements TaskManager
             }
         }
 
-
+        historyManager.add(newTask);
         if(!subTasks.containsKey(newTask.hashCode()))
         {
             subTasks.put(newTask.hashCode(), newTask);

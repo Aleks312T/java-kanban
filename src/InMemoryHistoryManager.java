@@ -2,15 +2,29 @@ import java.util.ArrayList;
 
 public class InMemoryHistoryManager extends Managers implements HistoryManager
 {
-    @Override
-    public void add(Task Task)
-    {
+    ArrayList<Task> history;
 
+    public InMemoryHistoryManager()
+    {
+        history = new ArrayList<>();
     }
 
     @Override
-    public ArrayList<SubTask> getHistory()
+    public void add(Task task)
     {
-        return new ArrayList<>();
+        if(history.size() == 10)
+        {
+            history.remove(0);
+            history.add(task);
+        } else
+        {
+            history.add(task);
+        }
+    }
+
+    @Override
+    public ArrayList<Task> getHistory()
+    {
+        return history;
     }
 }

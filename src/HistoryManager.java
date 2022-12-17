@@ -6,5 +6,9 @@ interface HistoryManager
 {
     void add(Task Task);
 
-    ArrayList <SubTask> getHistory();
+    ArrayList <Task> getHistory();
+
+    static HistoryManager getDefaultHistory() {
+        return new InMemoryHistoryManager();
+    }
 }

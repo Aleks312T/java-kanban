@@ -6,7 +6,6 @@ public class Main {
         // Поехали!
         Scanner scanner = new Scanner(System.in);
         InMemoryTaskManager taskManager = new InMemoryTaskManager();
-        TaskManager inMemoryTaskManager = Managers.getDefault();
 
         System.out.println("Приветствую!");
         System.out.println();
@@ -178,8 +177,16 @@ public class Main {
                 case(8):
                 {
                     System.out.println("Выбрана команда 8");
-                    System.out.println("8 - Вывести историю просмотров задач (не сделано)");
+                    System.out.println("8 - Вывести историю просмотров задач");
+                    System.out.println();
+                    System.out.println("История просмотров");
+                    List<Task> historyList = taskManager.getHistory();
 
+                    int size = Integer.min(10, historyList.size());
+                    for(int i = 0; i < size; ++i)
+                        System.out.println((size - i) + " - " + historyList.get(i));
+
+                    System.out.println();
                     break;
                 }
                 case(0):
@@ -208,7 +215,7 @@ public class Main {
             System.out.println("5 - Удаление по идентификатору");
             System.out.println("6 - Получение листа задач одного эпика");
             System.out.println("7 - Вывести все идентификаторы задач");
-            System.out.println("8 - Вывести историю просмотров задач (не сделано)");
+            System.out.println("8 - Вывести историю просмотров задач");
             System.out.println("0 - Выход из программы");
             System.out.print("Введите команду: ");
             command = scanner.nextLine();                       //Сделано с целью конвертации ввода из строки
