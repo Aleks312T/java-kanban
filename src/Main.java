@@ -40,26 +40,22 @@ public class Main {
                     System.out.println("Введите статус");
                     System.out.println("1 - NEW; 2 - IN_PROGRESS; 3 - DONE");
                     int input = scanner.nextInt();
-                    String status;
-                    Status enumStatus;
+                    Status status;
                     switch (input) {
                         case 1: {
-                            status = "NEW";
-                            enumStatus = Status.NEW;
+                            status = Status.NEW;
                             break;
                         }
                         case 2: {
-                            status = "IN_PROGRESS";
-                            enumStatus = Status.IN_PROGRESS;
+                            status = Status.IN_PROGRESS;
                             break;
                         }
                         case 3: {
-                            status = "DONE";
-                            enumStatus = Status.DONE;
+                            status = Status.DONE;
                             break;
                         }
                         default:
-                            status = "";
+                            status = Status.NONE;
                     }
 
                     System.out.println("Введите тип задачи (Task; Epic; SubTask)");

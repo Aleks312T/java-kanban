@@ -4,7 +4,7 @@ import java.util.HashMap;
 public class Epic extends Task
 {
     public static final String type = "Epic";
-    public Epic(String name, String description, String status)
+    public Epic(String name, String description, Status status)
     {
         super(name, description, status);
     }
@@ -18,24 +18,24 @@ public class Epic extends Task
         int inProgressTasks = 0;
         for(SubTask subTask : subTasks)
         {
-            if(subTask.status.equals("IN_PROGRESS"))
+            if(subTask.status == Status.IN_PROGRESS)
             {
                 inProgressTasks++;
                 break;
             }
-            if(subTask.status.equals("NEW"))
+            if(subTask.status == Status.NEW)
                 newTasks++;
-            if(subTask.status.equals("DONE"))
+            if(subTask.status == Status.DONE)
                 doneTasks++;
         }
         if(inProgressTasks > 0)                                             //Если есть IN_PROGRESS, то и эпик тоже
-            this.status = "IN_PROGRESS";
+            this.status = Status.IN_PROGRESS;
         else if(doneTasks == 0 && inProgressTasks == 0)                     //Условие учитывает отсутствие подзадач
-            this.status = "NEW";
+            this.status = Status.NEW;
         else if(newTasks == 0 && doneTasks > 0 && inProgressTasks == 0)     //Условие для DONE
-            this.status = "DONE";
+            this.status = Status.DONE;
         else
-            this.status = "IN_PROGRESS";                                    //Ситуация, когда только NEW и DONE
+            this.status = Status.IN_PROGRESS;                                    //Ситуация, когда только NEW и DONE
     }
 
     public void addSubTask(SubTask subTask)

@@ -14,15 +14,15 @@ public class InMemoryTaskManager implements TaskManager
     private void addToList(Task task)                 //Добавление в списки new, inProgress и done -Tasks
     {
         switch (task.status) {
-            case "NEW": {
+            case NEW: {
                 newTasks.add(task.hashCode());
                 break;
             }
-            case "IN_PROGRESS": {
+            case IN_PROGRESS: {
                 inProgressTasks.add(task.hashCode());
                 break;
             }
-            case "DONE": {
+            case DONE: {
                 doneTasks.add(task.hashCode());
                 break;
             }
@@ -32,7 +32,7 @@ public class InMemoryTaskManager implements TaskManager
     private void removeFromList(Task task)            //Удаление из списков new, inProgress и done -Tasks
     {
         switch (task.status) {
-            case "NEW": {
+            case NEW: {
                 for(int i = 0; i < newTasks.size(); ++i)
                     if(newTasks.get(i) == task.hashCode())
                     {
@@ -41,7 +41,7 @@ public class InMemoryTaskManager implements TaskManager
                     }
                 break;
             }
-            case "IN_PROGRESS": {
+            case IN_PROGRESS: {
                 for(int i = 0; i < inProgressTasks.size(); ++i)
                     if(inProgressTasks.get(i) == task.hashCode())
                     {
@@ -50,7 +50,7 @@ public class InMemoryTaskManager implements TaskManager
                     }
                 break;
             }
-            case "DONE": {
+            case DONE: {
                 for(int i = 0; i < doneTasks.size(); ++i)
                     if(doneTasks.get(i) == task.hashCode())
                     {
@@ -67,7 +67,7 @@ public class InMemoryTaskManager implements TaskManager
     {
         if(newTask.getName() == null || newTask.getDescription() == null || newTask.status == null)
             return;
-        if(newTask.getName().equals("") || newTask.status.equals(""))
+        if(newTask.getName().equals("") || newTask.status == Status.NONE)
             return;
 
         if(!tasks.containsKey(newTask.hashCode()))
@@ -78,7 +78,7 @@ public class InMemoryTaskManager implements TaskManager
         else
         {
             Task oldTask = tasks.get(newTask.hashCode());
-            if(!oldTask.status.equals(newTask.status))                  //Проверка на изменение статуса
+            if(oldTask.status != newTask.status)                  //Проверка на изменение статуса
             {
                 //Тут я убираю хэшкод из листа со старым статусом, и добавляю в лист с новым
                 removeFromList(oldTask);
@@ -92,7 +92,7 @@ public class InMemoryTaskManager implements TaskManager
     {
         if(newTask.getName() == null || newTask.getDescription() == null || newTask.status == null)
             return;
-        if(newTask.getName().equals("") || newTask.status.equals(""))
+        if(newTask.getName().equals("") || newTask.status == Status.NONE)
             return;
 
         Epic newEpic = new Epic(newTask.getName(), newTask.getDescription(), newTask.status);
@@ -104,7 +104,7 @@ public class InMemoryTaskManager implements TaskManager
         else
         {
             Task oldTask = epics.get(newTask.hashCode());
-            if(!oldTask.status.equals(newTask.status))                  //Проверка на изменение статуса
+            if(oldTask.status != newTask.status)                  //Проверка на изменение статуса
             {
                 //Тут я убираю хэшкод из листа со старым статусом, и добавляю в лист с новым
                 removeFromList(oldTask);
@@ -118,7 +118,7 @@ public class InMemoryTaskManager implements TaskManager
     {
         if(newTask.getName() == null || newTask.getDescription() == null || newTask.status == null)
             return;
-        if(newTask.getName().equals("") || newTask.status.equals(""))
+        if(newTask.getName().equals("") || newTask.status == Status.NONE)
             return;
 
         //Добавляю в эпик подзадачу
@@ -146,7 +146,7 @@ public class InMemoryTaskManager implements TaskManager
         else
         {
             Task oldTask = subTasks.get(newTask.hashCode());
-            if(!oldTask.status.equals(newTask.status))                  //Проверка на изменение статуса
+            if(oldTask.status != newTask.status)                  //Проверка на изменение статуса
             {
                 //Тут я убираю хэшкод из листа со старым статусом, и добавляю в лист с новым
                 removeFromList(oldTask);
@@ -158,7 +158,7 @@ public class InMemoryTaskManager implements TaskManager
     @Override
     public Task returnTask(int id)
     {
-        Task result = new Task("", "", "");
+        Task result;
         if(tasks.containsKey(id))
         {
             result = tasks.get(id);
@@ -169,12 +169,11 @@ public class InMemoryTaskManager implements TaskManager
             result = epics.get(id);
             return result;
         } else
-        if(subTasks.containsKey(id))
+        //if(subTasks.containsKey(id))
         {
             result = subTasks.get(id);
             return result;
         }
-        return result;                                              //Этот return не должен сработать, но нужна заглушка
     }
     @Override
     public void deleteTask(int id)

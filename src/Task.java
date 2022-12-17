@@ -5,12 +5,12 @@ public class Task {
     private String name;
     private String description;
     private int id;                                           //Пускай это будет и id задачи, и хэш-кодом
-    protected String status;
-    protected Status enumStatus;
 
-    public Task(String name, String description, String status)
+    protected Status status;
+
+    public Task(String name, String description, Status status)
     {
-        if(name != null && description != null && status != null)
+        if(name != null && description != null && status != null && status != Status.NONE)
         {
             this.name = name;
             this.description = description;
@@ -19,11 +19,11 @@ public class Task {
         }
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         if(status != null)
             this.status = status;
     }
