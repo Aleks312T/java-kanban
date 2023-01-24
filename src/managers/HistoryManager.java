@@ -12,7 +12,7 @@ public interface HistoryManager
     //List<Task> getHistory();
     int getMaxSize();
 
-    //void remove(int id);
+    void remove(int id);
 
     static HistoryManager getDefaultHistory() {
         return new InMemoryHistoryManager();

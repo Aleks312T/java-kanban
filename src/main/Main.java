@@ -1,5 +1,6 @@
 package main;
 
+import managers.InMemoryHistoryManager;
 import managers.InMemoryTaskManager;
 import tasks.*;
 
@@ -11,6 +12,7 @@ public class Main {
         // Поехали!
         Scanner scanner = new Scanner(System.in);
         InMemoryTaskManager taskManager = new InMemoryTaskManager();
+        InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
 
         System.out.println("Приветствую!");
         System.out.println();
@@ -194,6 +196,99 @@ public class Main {
                     System.out.println();
                     break;
                 }
+                case(11):
+                {
+                    System.out.println("Выбрана команда 11");
+                    System.out.println("11 - customAdd(Task task)");
+                    {
+                        System.out.println("Введите имя");
+                        String name;
+                        if(flag == 0)
+                        {
+                        /*У меня какой-то странный баг, не идет считывание имени после первой задачи,
+                        а без корректного имени сложно отлаживать кое-какие части.
+                        * Не могу понять с чем это связано, пока исправил вот так. */
+                            flag = 1;
+                        } else
+                        {
+                            //System.out.println("ПРОВЕРКА БАГА С NAME - БАГ ВСЕ ЕЩЕ ЕСТЬ");
+                            name = scanner.nextLine();
+                        }
+                        name = scanner.nextLine();
+
+                        System.out.println("Введите описание");
+                        String description = scanner.nextLine();
+
+                        System.out.println("Введите статус");
+                        System.out.println("1 - NEW; 2 - IN_PROGRESS; 3 - DONE");
+                        int input = scanner.nextInt();
+                        Status status;
+                        switch (input) {
+                            case 1: {
+                                status = Status.NEW;
+                                break;
+                            }
+                            case 2: {
+                                status = Status.IN_PROGRESS;
+                                break;
+                            }
+                            case 3: {
+                                status = Status.DONE;
+                                break;
+                            }
+                            default:
+                                status = Status.NONE;
+                        }
+
+                        System.out.println("Введите тип задачи (Task; Epic; SubTask)");
+                        System.out.println("1 - Task; 2 - Epic; 3 - SubTask");
+                        input = scanner.nextInt();
+                        switch (input) {
+                            case 1: {
+                                Task newTask = new Task(name, description, status);
+                                historyManager.customAdd(newTask);
+                                break;
+                            }
+                            case 2: {
+                                Epic newTask = new Epic(name, description, status);
+                                historyManager.customAdd(newTask);
+                                break;
+                            }
+                            case 3: {
+                                if(taskManager.countEpics() > 0)
+                                {
+                                    System.out.print("Введите код tasks.Epic задачи: ");
+                                    int id = scanner.nextInt();
+                                    if(taskManager.containEpic(id))
+                                    {
+                                        SubTask newTask = new SubTask(name, description, status, id);
+                                        historyManager.customAdd(newTask);
+                                    } else
+                                        System.out.print("Ошибка, такого эпика нет");
+
+                                } else
+                                {
+                                    System.out.print("Невозможно создать, т.к. нет tasks.Epic задач");
+                                }
+                                break;
+                            }
+                            default:
+                                System.out.println("Некорректный тип задачи");
+                        }
+                    }
+                    break;
+                }
+                case(12):
+                {
+                    System.out.println("Выбрана команда 12");
+                    System.out.println("12 - ArrayList customGetTasks()");
+                    System.out.println();
+                    System.out.println("CustomLinkedList contains:");
+                    ArrayList<Task> result = historyManager.customGetTasks();
+                    for(int i = 0; i < result.size(); ++i)
+                        System.out.println((result.size()) + " - " + result.get(i));
+                    break;
+                }
                 case(0):
                 {
                     exit = 1;
@@ -221,6 +316,10 @@ public class Main {
             System.out.println("6 - Получение листа задач одного эпика");
             System.out.println("7 - Вывести все идентификаторы задач");
             System.out.println("8 - Вывести историю просмотров задач");
+            System.out.println("--------------------------------------");
+            System.out.println("11 - customAdd(Task task)");
+            System.out.println("12 - ArrayList customGetTasks()");
+            System.out.println("13 - ");
             System.out.println("0 - Выход из программы");
             System.out.print("Введите команду: ");
             command = scanner.nextLine();                       //Сделано с целью конвертации ввода из строки
@@ -241,6 +340,12 @@ public class Main {
                     return 7;
                 case  ("8"):
                     return 8;
+                case  ("11"):
+                    return 11;
+                case  ("12"):
+                    return 12;
+                case  ("13"):
+                    return 13;
                 case  ("0"):
                     return 0;
                 default:

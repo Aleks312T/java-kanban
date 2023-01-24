@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 public class InMemoryTaskManager extends Managers implements TaskManager
 {
+
     private final HashMap<Integer, Task> tasks = new LinkedHashMap<>();
     private final HashMap <Integer, Epic> epics = new LinkedHashMap<>();
     private final HashMap <Integer, SubTask> subTasks = new LinkedHashMap<>();
@@ -176,16 +177,19 @@ public class InMemoryTaskManager extends Managers implements TaskManager
         if(tasks.containsKey(id))
         {
             result = tasks.get(id);
+            historyManager.add(tasks.get(id));
             return result;
         } else
         if(epics.containsKey(id))
         {
             result = epics.get(id);
+            historyManager.add(epics.get(id));
             return result;
         } else
         //if(subTasks.containsKey(id))
         {
             result = subTasks.get(id);
+            historyManager.add(subTasks.get(id));
             return result;
         }
     }
