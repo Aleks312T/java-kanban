@@ -27,6 +27,13 @@ public class InMemoryHistoryManager extends Managers implements HistoryManager
                 tail = newNode;
                 size = 1;
             } else
+            if(size == 1)
+            {
+                tail = newNode;
+                tail.prev = head;
+                head.next = tail;
+                size = 2;
+            } else
             {
                 Node oldNode = tail;
                 tail = newNode;
@@ -50,10 +57,10 @@ public class InMemoryHistoryManager extends Managers implements HistoryManager
             ArrayList<Task> result = new ArrayList<>(size);
             Node<Task> currentNode = tail;
 
-            while(currentNode != head) {
+            do {
                 result.add(currentNode.data);
                 currentNode = currentNode.prev;
-            }
+            } while(currentNode.prev != null);
             return result;
         }
     }

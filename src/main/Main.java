@@ -286,7 +286,7 @@ public class Main {
                     System.out.println("CustomLinkedList contains:");
                     ArrayList<Task> result = historyManager.customGetTasks();
                     for(int i = 0; i < result.size(); ++i)
-                        System.out.println((result.size()) + " - " + result.get(i));
+                        System.out.println((i + 1) + " - " + result.get(i));
                     break;
                 }
                 case(0):
