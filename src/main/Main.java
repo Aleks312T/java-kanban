@@ -289,6 +289,10 @@ public class Main {
                         System.out.println((i + 1) + " - " + result.get(i));
                     break;
                 }
+                case(13):
+                {
+                    System.out.println("Выбрана команда 13");
+                }
                 case(0):
                 {
                     exit = 1;

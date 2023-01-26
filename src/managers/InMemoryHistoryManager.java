@@ -47,6 +47,8 @@ public class InMemoryHistoryManager extends Managers implements HistoryManager
         {
             if(size == 0)
                 return new ArrayList<>();
+            System.out.println("HEAD: " + head.toString());
+            System.out.println("TAIL: " + tail.toString());
             if(size == 1)
             {
                 ArrayList<Task> result = new ArrayList<>(size);
@@ -56,11 +58,13 @@ public class InMemoryHistoryManager extends Managers implements HistoryManager
 
             ArrayList<Task> result = new ArrayList<>(size);
             Node<Task> currentNode = tail;
+            result.add(currentNode.data);
 
-            do {
-                result.add(currentNode.data);
+            while(currentNode.prev != null) {
                 currentNode = currentNode.prev;
-            } while(currentNode.prev != null);
+                result.add(currentNode.data);
+            }
+
             return result;
         }
     }
