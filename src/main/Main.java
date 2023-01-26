@@ -292,6 +292,25 @@ public class Main {
                 case(13):
                 {
                     System.out.println("Выбрана команда 13");
+                    System.out.println("13 - void customRemoveNode(Node node)");
+                    System.out.println("Какую вершину удалить?");
+                    System.out.println("    1 - Голову");
+                    System.out.println("    2 - Хвост");
+                    System.out.println("    3 - Середину");
+                    int input = scanner.nextInt();
+                    switch (input) {
+                        case 1:
+                        case 2: {
+                            historyManager.customRemoveNode(input);
+                            break;
+                        }
+                        case 3: {
+
+                            break;
+                        }
+                    }
+                    //historyManager.customRemoveNode();
+                    break;
                 }
                 case(0):
                 {
@@ -323,7 +342,7 @@ public class Main {
             System.out.println("--------------------------------------");
             System.out.println("11 - customAdd(Task task)");
             System.out.println("12 - ArrayList customGetTasks()");
-            System.out.println("13 - ");
+            System.out.println("13 - void customRemoveNode(Node node)");
             System.out.println("0 - Выход из программы");
             System.out.print("Введите команду: ");
             command = scanner.nextLine();                       //Сделано с целью конвертации ввода из строки

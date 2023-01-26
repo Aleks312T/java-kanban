@@ -3,14 +3,20 @@ package managers;
 import tasks.Task;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class InMemoryHistoryManager extends Managers implements HistoryManager
 {
     ArrayList<Task> history;
+    CustomLinkedList customHistory;
+    HashMap<Integer, Node> historyHashMap;
+
     final static int maxSize = 10;
     public InMemoryHistoryManager()
     {
         history = new ArrayList<>();
+        customHistory = new CustomLinkedList();
+        historyHashMap = new HashMap<>(10);
     }
 
     private class CustomLinkedList
@@ -64,21 +70,60 @@ public class InMemoryHistoryManager extends Managers implements HistoryManager
                 currentNode = currentNode.prev;
                 result.add(currentNode.data);
             }
-
             return result;
+        }
+
+        protected void removeNode(Node node)
+        {
+            boolean flagHead = false;
+            boolean flagTail = false;
+
+            if(node.prev == null)
+                flagHead = true;
+            if(node.next == null)
+                flagTail = true;
+
+            if(flagHead && flagTail)                                //Случай с одной вершиной
+            {
+                head = null;
+                tail = null;
+            } else
+            if(flagHead && !flagTail)                               //Случай с головой
+            {
+                head = node.next;
+            } else
+            if(!flagHead && flagTail)                               //Случай с хвостом
+            {
+                tail = node.prev;
+            } else
+            if(!flagHead && !flagTail)                              //Случай с серединой
+            {
+                node.prev.next = node.next;
+                node.next.prev = node.prev;
+            }
+            size--;
+
         }
     }
 
-    CustomLinkedList customLinkedList = new CustomLinkedList();
-
     public void customAdd(Task task)
     {
-        customLinkedList.linkLast(task);
+        customHistory.linkLast(task);
     }
 
     public ArrayList customGetTasks()
     {
-        return customLinkedList.getTasks();
+        return customHistory.getTasks();
+    }
+
+    //public void customRemoveNode(Node node)
+    public void customRemoveNode(int code)
+    {
+        if(code == 1)
+            customHistory.removeNode(customHistory.head);
+        else
+        if(code == 2)
+            customHistory.removeNode(customHistory.tail);
     }
 
     @Override
