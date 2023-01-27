@@ -186,12 +186,13 @@ public class InMemoryTaskManager extends Managers implements TaskManager
             historyManager.add(epics.get(id));
             return result;
         } else
-        //if(subTasks.containsKey(id))
+        if(subTasks.containsKey(id))
         {
             result = subTasks.get(id);
             historyManager.add(subTasks.get(id));
             return result;
         }
+        return null;
     }
     @Override
     public void deleteTask(int id)

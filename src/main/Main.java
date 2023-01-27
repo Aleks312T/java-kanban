@@ -139,7 +139,7 @@ public class Main {
                     System.out.print("Введите код задачи: ");
                     int id = scanner.nextInt();
                     Task demandedTask = taskManager.returnTask(id);
-                    System.out.print(demandedTask.toString());
+                    System.out.print(demandedTask);
                     break;
                 }
                 case(5):
@@ -191,7 +191,7 @@ public class Main {
 
                     int size = Integer.min(10, historyList.size());
                     for(int i = 0; i < size; ++i)
-                        System.out.println((size - i) + " - " + historyList.get(i));
+                        System.out.println((i + 1) + " - " + historyList.get(i));
 
                     System.out.println();
                     break;

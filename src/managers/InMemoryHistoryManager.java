@@ -7,14 +7,13 @@ import java.util.HashMap;
 
 public class InMemoryHistoryManager extends Managers implements HistoryManager
 {
-    ArrayList<Task> history;
+    //ArrayList<Task> history = new ArrayList<>();
     CustomLinkedList customHistory;
     HashMap<Integer, Node> historyHashMap;
 
     final static int maxSize = 10;
     public InMemoryHistoryManager()
     {
-        history = new ArrayList<>();
         customHistory = new CustomLinkedList();
         historyHashMap = new HashMap<>(10);
     }
@@ -115,8 +114,6 @@ public class InMemoryHistoryManager extends Managers implements HistoryManager
             //А потом добавить в конец
             customHistory.linkLast(task);
         }
-
-
     }
 
     public ArrayList customGetTasks()
@@ -142,25 +139,34 @@ public class InMemoryHistoryManager extends Managers implements HistoryManager
     @Override
     public void add(Task task)
     {
-        if(history.size() == maxSize)
+        if(customHistory.size == maxSize)
+            customHistory.removeNode(customHistory.head);
+
+        if(!historyHashMap.containsKey(task.hashCode()))
         {
-            history.remove(0);
-            history.add(task);
+            customHistory.linkLast(task);                           //Добавляем вершину в конец если ее не было
         } else
         {
-            history.add(task);
+            //Если вершина уже была ее надо сначала стереть
+            customHistory.removeNode(historyHashMap.get(task.hashCode()));
+            //А потом добавить в конец
+            customHistory.linkLast(task);
         }
     }
 
     @Override
     public void remove(int id)
     {
-
+        if(historyHashMap.containsKey(id))
+        {
+            customHistory.removeNode(historyHashMap.get(id));
+            historyHashMap.remove(id);
+        }
     }
 
     @Override
     public ArrayList<Task> getHistory()
     {
-        return history;
+        return customHistory.getTasks();
     }
 }
