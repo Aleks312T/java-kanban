@@ -9,7 +9,6 @@ public interface HistoryManager
     void add(Task Task);
 
     ArrayList <Task> getHistory();
-    //List<Task> getHistory();
     int getMaxSize();
 
     void remove(int id);

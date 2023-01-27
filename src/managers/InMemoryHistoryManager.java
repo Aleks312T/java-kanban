@@ -7,9 +7,8 @@ import java.util.HashMap;
 
 public class InMemoryHistoryManager extends Managers implements HistoryManager
 {
-    //ArrayList<Task> history = new ArrayList<>();
     CustomLinkedList customHistory;
-    HashMap<Integer, Node> historyHashMap;
+    HashMap<Integer, Node<Task>> historyHashMap;
 
     final static int maxSize = 10;
     public InMemoryHistoryManager()
@@ -40,7 +39,7 @@ public class InMemoryHistoryManager extends Managers implements HistoryManager
                 size = 2;
             } else
             {
-                Node oldNode = tail;
+                Node<Task> oldNode = tail;
                 tail = newNode;
                 tail.prev = oldNode;
                 oldNode.next = tail;
@@ -53,8 +52,8 @@ public class InMemoryHistoryManager extends Managers implements HistoryManager
         {
             if(size == 0)
                 return new ArrayList<>();
-            System.out.println("HEAD: " + head.toString());
-            System.out.println("TAIL: " + tail.toString());
+            //System.out.println("HEAD: " + head.toString());
+            //System.out.println("TAIL: " + tail.toString());
 
             ArrayList<Task> result = new ArrayList<>(size);
             Node<Task> currentNode = tail;
@@ -67,7 +66,7 @@ public class InMemoryHistoryManager extends Managers implements HistoryManager
             return result;
         }
 
-        protected void removeNode(Node node)
+        protected void removeNode(Node<Task> node)
         {
             boolean flagHead = false;
             boolean flagTail = false;
@@ -94,40 +93,11 @@ public class InMemoryHistoryManager extends Managers implements HistoryManager
             } else
             if(!flagHead && !flagTail)                              //Случай с серединой
             {
-                node.prev.next = node.next;
-                node.next.prev = node.prev;
+                node.prev.next = node.next;                         //Привязываем предыдущую вершину к следующей
+                node.next.prev = node.prev;                         //Привязываем следующую вершину к предыдущей
             }
             size--;
             historyHashMap.remove(node.data.hashCode());
-        }
-    }
-
-    public void customAdd(Task task)
-    {
-        if(!historyHashMap.containsKey(task.hashCode()))
-        {
-            customHistory.linkLast(task);                           //Добавляем вершину в конец если ее не было
-        } else
-        {
-            //Если вершина уже была ее надо сначала стереть
-            customHistory.removeNode(historyHashMap.get(task.hashCode()));
-            //А потом добавить в конец
-            customHistory.linkLast(task);
-        }
-    }
-
-    public ArrayList customGetTasks()
-    {
-        return customHistory.getTasks();
-    }
-
-    //public void customRemoveNode(Node node)
-    public void customRemoveNode(int id)
-    {
-        if(historyHashMap.containsKey(id))
-        {
-            customHistory.removeNode(historyHashMap.get(id));
-            historyHashMap.remove(id);
         }
     }
 
