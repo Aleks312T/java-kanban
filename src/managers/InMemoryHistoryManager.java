@@ -47,6 +47,7 @@ public class InMemoryHistoryManager extends Managers implements HistoryManager
                 oldNode.next = tail;
                 size++;
             }
+            historyHashMap.put(task.hashCode(), newNode);
         }
 
         protected ArrayList<Task> getTasks()
@@ -55,12 +56,6 @@ public class InMemoryHistoryManager extends Managers implements HistoryManager
                 return new ArrayList<>();
             System.out.println("HEAD: " + head.toString());
             System.out.println("TAIL: " + tail.toString());
-            if(size == 1)
-            {
-                ArrayList<Task> result = new ArrayList<>(size);
-                result.add(head.data);
-                return result;
-            }
 
             ArrayList<Task> result = new ArrayList<>(size);
             Node<Task> currentNode = tail;
@@ -91,10 +86,12 @@ public class InMemoryHistoryManager extends Managers implements HistoryManager
             if(flagHead && !flagTail)                               //Случай с головой
             {
                 head = node.next;
+                head.prev = null;
             } else
             if(!flagHead && flagTail)                               //Случай с хвостом
             {
                 tail = node.prev;
+                tail.next = null;
             } else
             if(!flagHead && !flagTail)                              //Случай с серединой
             {
@@ -102,13 +99,24 @@ public class InMemoryHistoryManager extends Managers implements HistoryManager
                 node.next.prev = node.prev;
             }
             size--;
-
+            historyHashMap.remove(node.data.hashCode());
         }
     }
 
     public void customAdd(Task task)
     {
-        customHistory.linkLast(task);
+        if(!historyHashMap.containsKey(task.hashCode()))
+        {
+            customHistory.linkLast(task);                           //Добавляем вершину в конец если ее не было
+        } else
+        {
+            //Если вершина уже была ее надо сначала стереть
+            customHistory.removeNode(historyHashMap.get(task.hashCode()));
+            //А потом добавить в конец
+            customHistory.linkLast(task);
+        }
+
+
     }
 
     public ArrayList customGetTasks()
@@ -117,13 +125,13 @@ public class InMemoryHistoryManager extends Managers implements HistoryManager
     }
 
     //public void customRemoveNode(Node node)
-    public void customRemoveNode(int code)
+    public void customRemoveNode(int id)
     {
-        if(code == 1)
-            customHistory.removeNode(customHistory.head);
-        else
-        if(code == 2)
-            customHistory.removeNode(customHistory.tail);
+        if(historyHashMap.containsKey(id))
+        {
+            customHistory.removeNode(historyHashMap.get(id));
+            historyHashMap.remove(id);
+        }
     }
 
     @Override

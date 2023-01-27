@@ -294,22 +294,8 @@ public class Main {
                     System.out.println("Выбрана команда 13");
                     System.out.println("13 - void customRemoveNode(Node node)");
                     System.out.println("Какую вершину удалить?");
-                    System.out.println("    1 - Голову");
-                    System.out.println("    2 - Хвост");
-                    System.out.println("    3 - Середину");
                     int input = scanner.nextInt();
-                    switch (input) {
-                        case 1:
-                        case 2: {
-                            historyManager.customRemoveNode(input);
-                            break;
-                        }
-                        case 3: {
-
-                            break;
-                        }
-                    }
-                    //historyManager.customRemoveNode();
+                    historyManager.customRemoveNode(input);
                     break;
                 }
                 case(0):
