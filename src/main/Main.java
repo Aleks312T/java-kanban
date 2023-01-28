@@ -1,6 +1,7 @@
 package main;
 
 import managers.InMemoryTaskManager;
+import managers.Managers;
 import tasks.*;
 
 import java.util.*;
@@ -10,12 +11,11 @@ public class Main {
     public static void main(String[] args) {
         // Поехали!
         Scanner scanner = new Scanner(System.in);
-        InMemoryTaskManager taskManager = new InMemoryTaskManager();
+        InMemoryTaskManager taskManager = (InMemoryTaskManager) InMemoryTaskManager.getDefaultTaskManager();
 
         System.out.println("Приветствую!");
         System.out.println();
         int exit = 0;
-        int flag = 0;
         while(exit == 0)
         {
             int command = DoCommand();
@@ -25,19 +25,6 @@ public class Main {
                     System.out.println("Выбрана команда 1");
                     System.out.println("Введите имя");
                     String name;
-                    /* 27.01.2023 - Сейчас у меня посреди разработки пропал баг, причем эту часть
-                     * кода я не менял. Все еще без понятия с чем это связано
-                    if(flag == 0)
-                    {
-                        //У меня какой-то странный баг, не идет считывание имени после первой задачи,
-                        //а без корректного имени сложно отлаживать кое-какие части.
-                        //Не могу понять с чем это связано, пока исправил вот так.
-                        flag = 1;
-                    } else
-                    {
-                        //System.out.println("ПРОВЕРКА БАГА С NAME - БАГ ВСЕ ЕЩЕ ЕСТЬ");
-                        name = scanner.nextLine();
-                    }               //*/
                     name = scanner.nextLine();
 
                     System.out.println("Введите описание");
@@ -46,7 +33,7 @@ public class Main {
                     System.out.println("Введите статус");
                     System.out.println("1 - NEW; 2 - IN_PROGRESS; 3 - DONE");
                     String input = scanner.nextLine();
-                    int intInput = tryParseInt(input, 0);
+                    int intInput = tryParseInt(input);
                     Status status;
                     switch (intInput) {
                         case 1: {
@@ -68,7 +55,7 @@ public class Main {
                     System.out.println("Введите тип задачи (Task; Epic; SubTask)");
                     System.out.println("1 - Task; 2 - Epic; 3 - SubTask");
                     input = scanner.nextLine();
-                    intInput = tryParseInt(input, 0);
+                    intInput = tryParseInt(input);
                     switch (intInput) {
                         case 1: {
                             Task newTask = new Task(name, description, status);
@@ -85,7 +72,7 @@ public class Main {
                             {
                                 System.out.print("Введите код tasks.Epic задачи: ");
                                 String id = scanner.nextLine();
-                                int intId = tryParseInt(id, 0);
+                                int intId = tryParseInt(id);
                                 if(taskManager.containEpic(intId))
                                 {
                                     SubTask newTask = new SubTask(name, description, status, intId);
@@ -127,7 +114,7 @@ public class Main {
                     System.out.println("Вы уверены, что хотите удалить все задачи?");
                     System.out.print("Введите 1 для подтверждения: ");
                     String input = scanner.nextLine();
-                    int intInput = tryParseInt(input, 0);
+                    int intInput = tryParseInt(input);
                     if(intInput == 1)
                     {
                         taskManager.deleteAllTasks();
@@ -143,7 +130,7 @@ public class Main {
                     System.out.print("Введите код задачи: ");
 
                     String id = scanner.nextLine();
-                    int intId = tryParseInt(id, 0);
+                    int intId = tryParseInt(id);
 
                     Task demandedTask = taskManager.returnTask(intId);
                     System.out.print(demandedTask);
@@ -157,7 +144,7 @@ public class Main {
                     System.out.print("Введите код задачи: ");
 
                     String id = scanner.nextLine();
-                    int intId = tryParseInt(id, -1);
+                    int intId = tryParseInt(id);
 
                     taskManager.deleteTask(intId);
                     break;
@@ -170,7 +157,7 @@ public class Main {
                     System.out.print("Введите код эпика: ");
 
                     String id = scanner.nextLine();
-                    int intId = tryParseInt(id, -1);
+                    int intId = tryParseInt(id);
 
                     if(taskManager.containEpic(intId))
                     {
@@ -244,7 +231,7 @@ public class Main {
             System.out.print("Введите команду: ");
 
             command = scanner.nextLine();
-            result = tryParseInt(command, -1);
+            result = tryParseInt(command);
             if(result == -1)
                 System.out.println("Неверный ввод команды!");
             else
@@ -254,11 +241,11 @@ public class Main {
 
     //Сделано с целью конвертации ввода из строки
     //в обычное число в обход возможных ошибок
-    public static int tryParseInt(String value, int defaultVal) {
+    public static int tryParseInt(String value) {
         try {
             return Integer.parseInt(value);
         } catch (NumberFormatException e) {
-            return defaultVal;
+            return -1;
         }
     }
 }

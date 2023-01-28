@@ -1,5 +1,6 @@
 package managers;
 
+import tasks.Node;
 import tasks.Task;
 
 import java.util.ArrayList;
@@ -45,15 +46,13 @@ public class InMemoryHistoryManager extends Managers implements HistoryManager
                 oldNode.next = tail;
                 size++;
             }
-            historyHashMap.put(task.hashCode(), newNode);
+            historyHashMap.put(task.getId(), newNode);
         }
 
         protected ArrayList<Task> getTasks()
         {
             if(size == 0)
                 return new ArrayList<>();
-            //System.out.println("HEAD: " + head.toString());
-            //System.out.println("TAIL: " + tail.toString());
 
             ArrayList<Task> result = new ArrayList<>(size);
             Node<Task> currentNode = tail;
@@ -97,8 +96,20 @@ public class InMemoryHistoryManager extends Managers implements HistoryManager
                 node.next.prev = node.prev;                         //Привязываем следующую вершину к предыдущей
             }
             size--;
-            historyHashMap.remove(node.data.hashCode());
+            historyHashMap.remove(node.data.getId());
         }
+
+        protected void clearHistory()
+        {
+            head = null;
+            tail = null;
+            historyHashMap.clear();
+        }
+    }
+
+    public void clearHistory()
+    {
+        customHistory.clearHistory();
     }
 
     @Override
@@ -112,13 +123,13 @@ public class InMemoryHistoryManager extends Managers implements HistoryManager
         if(customHistory.size == maxSize)
             customHistory.removeNode(customHistory.head);
 
-        if(!historyHashMap.containsKey(task.hashCode()))
+        if(!historyHashMap.containsKey(task.getId()))
         {
             customHistory.linkLast(task);                           //Добавляем вершину в конец если ее не было
         } else
         {
             //Если вершина уже была ее надо сначала стереть
-            customHistory.removeNode(historyHashMap.get(task.hashCode()));
+            customHistory.removeNode(historyHashMap.get(task.getId()));
             //А потом добавить в конец
             customHistory.linkLast(task);
         }

@@ -46,6 +46,10 @@ public class Task {
         this.description = description;
     }
 
+    public int getId() {
+        return id;                                              // возвращаем хеш
+    }
+
     @Override
     public String toString() {
 
