@@ -75,9 +75,53 @@ public class InMemoryTaskManager extends Managers implements TaskManager
         return historyManager.getHistory();
     }
 
-    public String toString(Task task)
+    public static Status stringToStatus(String input)
+    {
+        Status result;
+        switch (input) {
+            case "NEW": {
+                result = Status.NEW;
+                break;
+            }
+            case "IN_PROGRESS": {
+                result = Status.IN_PROGRESS;
+                break;
+            }
+            case "DONE": {
+                result = Status.DONE;
+                break;
+            }
+            default:
+                result = Status.NONE;
+        }
+        return result;
+    }
+
+    protected String taskToString(Task task)
     {
         return task.toString();
+    }
+
+    protected Task taskFromString(String value)
+    {
+        String[] split = value.split(",");
+        Task result;
+        switch (split[1])
+        {
+            case "Task":
+                result = new Task(split[2], split[4], stringToStatus(split[3]));
+                break;
+            case "Epic":
+                result = new Epic(split[2], split[4], stringToStatus(split[3]));
+                break;
+            case "SubTusk":
+                result = new SubTask(split[2], split[4], stringToStatus(split[3]), Integer.parseInt(split[5]));
+            break;
+            default:
+                result = null;
+                break;
+        }
+        return result;
     }
 
     @Override
