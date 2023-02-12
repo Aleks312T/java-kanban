@@ -75,6 +75,11 @@ public class InMemoryTaskManager extends Managers implements TaskManager
         return historyManager.getHistory();
     }
 
+    public String toString(Task task)
+    {
+        return task.toString();
+    }
+
     @Override
     public void addTask(Task newTask)
     {

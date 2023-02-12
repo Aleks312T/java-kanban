@@ -13,19 +13,27 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         super();
     }
 
+    public void save()
+    {
+
+    }
+
     @Override
     public void addTask(Task newTask) {
         super.addTask(newTask);
+        save();
     }
 
     @Override
     public void addTask(Epic newTask) {
         super.addTask(newTask);
+        save();
     }
 
     @Override
     public void addTask(SubTask newTask) {
         super.addTask(newTask);
+        save();
     }
 
     @Override
@@ -36,6 +44,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     @Override
     public void deleteTask(int id) {
         super.deleteTask(id);
+        save();
     }
 
     @Override
@@ -71,6 +80,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     @Override
     public void deleteAllTasks() {
         super.deleteAllTasks();
+        save();
     }
 
     @Override
