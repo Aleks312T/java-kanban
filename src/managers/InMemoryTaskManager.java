@@ -102,6 +102,28 @@ public class InMemoryTaskManager extends Managers implements TaskManager
         return task.toString();
     }
 
+    public static TaskTypes taskTypeFromString(String input)
+    {
+        TaskTypes result;
+        switch (input) {
+            case "TASK": {
+                result = TaskTypes.TASK;
+                break;
+            }
+            case "EPIC": {
+                result = TaskTypes.EPIC;
+                break;
+            }
+            case "SUBTASK": {
+                result = TaskTypes.SUBTASK;
+                break;
+            }
+            default:
+                result = TaskTypes.NONE;
+        }
+        return result;
+    }
+
     protected static Task taskFromString(String value)       //Надо проверить условие
     {
         String[] split = value.split(",");
@@ -109,13 +131,13 @@ public class InMemoryTaskManager extends Managers implements TaskManager
         if(split.length == 5 || (split.length == 6 && stringToStatus(split[3]) != Status.NONE)) {
             switch (split[1])
             {
-                case "Task":
+                case "TASK":
                     result = new Task(split[2], split[4], stringToStatus(split[3]));
                     break;
-                case "Epic":
+                case "EPIC":
                     result = new Epic(split[2], split[4], stringToStatus(split[3]));
                     break;
-                case "SubTusk":
+                case "SUBTASK":
                     result = new SubTask(split[2], split[4], stringToStatus(split[3]), Integer.parseInt(split[5]));
                 break;
                 default:

@@ -1,8 +1,10 @@
 package managers;
 
+import main.Status;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
+import tasks.TaskTypes;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -47,14 +49,21 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
                     String[] data = line.split(",");
                     //в data лежат данные по Task
-                    boolean smth = true;
-
-
+                    switch (taskTypeFromString(data[1]))
+                    {
+                        case TASK:
+                        case EPIC:
+                        case SUBTASK: {
+                            this.addTask(taskFromString(line));
+                            break;
+                        }
+                    }
                     //System.out.println(line);
 
                 }
                 String line = br.readLine();
                 String[] data = line.split(",");
+
                 //History manager
             } else
             {
