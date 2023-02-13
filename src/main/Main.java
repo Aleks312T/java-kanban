@@ -1,15 +1,21 @@
 package main;
 
+import managers.FileBackedTasksManager;
 import managers.InMemoryTaskManager;
 import managers.Managers;
 import tasks.*;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception{
         // Поехали!
+        final String HOME = System.getProperty("user.home");
         Scanner scanner = new Scanner(System.in);
         InMemoryTaskManager taskManager = (InMemoryTaskManager) InMemoryTaskManager.getDefaultTaskManager();
 
@@ -196,6 +202,22 @@ public class Main {
                     System.out.println();
                     break;
                 }
+                case(11):
+                {
+                    Path localSaveFile = Paths.get("SaveFile.txt");
+
+                    // создание директории documentsDirectory
+                    Path documentsDirectory = Files.createDirectories(Paths.get(
+                            HOME,"Documents", "AleksRepository", "KanbanProject"));
+                    Path documentsSaveFile = Paths.get(documentsDirectory.toString(), "AleksSaveFile.txt");
+
+                    FileBackedTasksManager localFileBackedTasksManager = new FileBackedTasksManager(localSaveFile);
+                    FileBackedTasksManager reposFileBackedTasksManager = new FileBackedTasksManager(documentsSaveFile);
+
+                    //Надо потом убрать
+                    Files.deleteIfExists(localSaveFile);
+                    Files.deleteIfExists(documentsSaveFile);
+                }
                 case(0):
                 {
                     exit = 1;
@@ -226,6 +248,8 @@ public class Main {
             System.out.println("6 - Получение листа задач одного эпика");
             System.out.println("7 - Вывести все идентификаторы задач");
             System.out.println("8 - Вывести историю просмотров задач");
+            System.out.println("--------------------------------------");
+            System.out.println("11 - Создание менеджера с записью в файл");
             System.out.println("--------------------------------------");
             System.out.println("0 - Выход из программы");
             System.out.print("Введите команду: ");

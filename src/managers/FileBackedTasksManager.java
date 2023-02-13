@@ -4,6 +4,7 @@ import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
 
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,17 +17,103 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     public FileBackedTasksManager(Path saveFile) {
         super();
-
+        if(Files.exists(saveFile))
+            loadFromFile(saveFile);
+        else
+            startFile(saveFile);
     }
 
-    public void save()
+    private void save()
     {
 
     }
 
-    public void readFromFile()
+    protected void loadFromFile(Path path)
     {
+        try (Reader reader = new FileReader(path.toFile())) {
+            BufferedReader br = new BufferedReader(reader);
 
+            System.out.println("Trying to read strings from " + path);
+            if(br.readLine().equals("id,type,name,status,description,epic"))
+            {
+                int flag = 0;
+                while (br.ready() && flag == 0) {
+                    String line = br.readLine();
+                    if(line.equals(""))             //Выход из цикла по окончанию записи задач
+                    {
+                        flag = 1;
+                        continue;
+                    }
+
+                    String[] data = line.split(",");
+                    //в data лежат данные по Task
+
+
+
+                    //System.out.println(line);
+
+                }
+                String line = br.readLine();
+                String[] data = line.split(",");
+                //History manager
+            } else
+            {
+                System.out.println("Incorrect data in " + path);
+            }
+            br.close();
+            System.out.println("Done!\n");
+
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    protected void startFile(Path path)
+    {
+        System.out.println("Trying create file in " + path + "...");
+        try (PrintWriter writer = new PrintWriter(path.toString())) {
+
+            System.out.println("Trying to write strings...");
+            StringBuilder sb = new StringBuilder();
+            sb.append("id,");
+            sb.append("type,");
+            sb.append("name,");
+            sb.append("status,");
+            sb.append("description,");
+            sb.append("epic");
+            sb.append('\n');
+
+            /*
+            sb.append("17905,");
+            sb.append("TASK,");
+            sb.append("1,");
+            sb.append("NEW,");
+            sb.append("1,");
+            sb.append("");
+            sb.append('\n');
+
+            sb.append("17937,");
+            sb.append("EPIC,");
+            sb.append("2,");
+            sb.append("IN_PROGRESS,");
+            sb.append("2,");
+            sb.append("");
+            sb.append('\n');
+
+            sb.append('\n');
+            sb.append("2,1");
+            ///////*/
+            writer.write(sb.toString());
+            writer.close();
+            System.out.println("Done!\n");
+
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override

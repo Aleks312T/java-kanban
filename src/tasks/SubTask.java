@@ -8,7 +8,7 @@ public class SubTask extends Task
     public SubTask(String name, String description, Status status, int parent)
     {
         super(name, description, status);
-        this.taskType = TaskTypes.SubTask;
+        this.taskType = TaskTypes.SUBTASK;
         this.parent = parent;
     }
 
