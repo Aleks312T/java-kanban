@@ -97,30 +97,32 @@ public class InMemoryTaskManager extends Managers implements TaskManager
         return result;
     }
 
-    protected String taskToString(Task task)
+    protected static String taskToString(Task task)
     {
         return task.toString();
     }
 
-    protected Task taskFromString(String value)
+    protected static Task taskFromString(String value)       //Надо проверить условие
     {
         String[] split = value.split(",");
         Task result;
-        switch (split[1])
-        {
-            case "Task":
-                result = new Task(split[2], split[4], stringToStatus(split[3]));
+        if(split.length == 5 || (split.length == 6 && stringToStatus(split[3]) != Status.NONE)) {
+            switch (split[1])
+            {
+                case "Task":
+                    result = new Task(split[2], split[4], stringToStatus(split[3]));
+                    break;
+                case "Epic":
+                    result = new Epic(split[2], split[4], stringToStatus(split[3]));
+                    break;
+                case "SubTusk":
+                    result = new SubTask(split[2], split[4], stringToStatus(split[3]), Integer.parseInt(split[5]));
                 break;
-            case "Epic":
-                result = new Epic(split[2], split[4], stringToStatus(split[3]));
-                break;
-            case "SubTusk":
-                result = new SubTask(split[2], split[4], stringToStatus(split[3]), Integer.parseInt(split[5]));
-            break;
-            default:
-                result = null;
-                break;
-        }
+                default:
+                    result = null;
+                    break;
+            }
+        } else return null;
         return result;
     }
 

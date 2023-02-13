@@ -4,16 +4,27 @@ import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import java.util.ArrayList;
 
 public class FileBackedTasksManager extends InMemoryTaskManager implements TaskManager
 {
+    Path saveFile;
 
-    public FileBackedTasksManager(Task newTask) {
+    public FileBackedTasksManager(Path saveFile) {
         super();
+
     }
 
     public void save()
+    {
+
+    }
+
+    public void readFromFile()
     {
 
     }
@@ -49,31 +60,31 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     @Override
     public int countEpics() {
-        return super.countEpics();
+        return super.countEpics();                                  //Не добавляю save, потому что ничего не меняется
     }
 
     @Override
-    public boolean containEpic(int code) {
+    public boolean containEpic(int code) {                          //Не добавляю save, потому что ничего не меняется
         return super.containEpic(code);
     }
 
     @Override
-    public ArrayList<SubTask> findSubTasks(int code) {
+    public ArrayList<SubTask> findSubTasks(int code) {              //Не добавляю save, потому что ничего не меняется
         return super.findSubTasks(code);
     }
 
     @Override
-    public void printNewTasks() {
+    public void printNewTasks() {                                   //Не добавляю save, потому что ничего не меняется
         super.printNewTasks();
     }
 
     @Override
-    public void printInProgressTasks() {
+    public void printInProgressTasks() {                            //Не добавляю save, потому что ничего не меняется
         super.printInProgressTasks();
     }
 
     @Override
-    public void printDoneTasks() {
+    public void printDoneTasks() {                                  //Не добавляю save, потому что ничего не меняется
         super.printDoneTasks();
     }
 
@@ -84,7 +95,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     }
 
     @Override
-    public void printAllCodes() {
+    public void printAllCodes() {                                   //Не добавляю save, потому что ничего не меняется
         super.printAllCodes();
     }
 }
