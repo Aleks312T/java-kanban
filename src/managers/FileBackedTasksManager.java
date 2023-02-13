@@ -47,7 +47,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
                     String[] data = line.split(",");
                     //в data лежат данные по Task
-
+                    boolean smth = true;
 
 
                     //System.out.println(line);
