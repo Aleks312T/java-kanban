@@ -19,7 +19,7 @@ public class Task {
             this.name = name;
             this.description = description;
             this.status = status;
-            this.taskType = TaskTypes.Task;
+            this.taskType = TaskTypes.TASK;
             this.id = 17 * 31 * 31 + name.hashCode() * 31 + description.hashCode();
         }
     }

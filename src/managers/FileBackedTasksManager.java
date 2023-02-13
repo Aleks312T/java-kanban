@@ -4,6 +4,7 @@ import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
 
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,7 +17,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     public FileBackedTasksManager(Path saveFile) {
         super();
-
+        loadFromFile(saveFile);
     }
 
     public void save()
@@ -24,9 +25,50 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     }
 
-    public void readFromFile()
+    public void loadFromFile(Path path)
     {
+        System.out.println("Trying create writer...");
+        try (PrintWriter writer = new PrintWriter("SaveFile.txt")) {
 
+            System.out.println("Trying to write strings...");
+            StringBuilder sb = new StringBuilder();
+            sb.append("id,");
+            sb.append("type,");
+            sb.append("name,");
+            sb.append("status,");
+            sb.append("description,");
+            sb.append("epic");
+            sb.append('\n');
+
+            /*
+            sb.append("17905,");
+            sb.append("TASK,");
+            sb.append("1,");
+            sb.append("NEW,");
+            sb.append("1,");
+            sb.append("");
+            sb.append('\n');
+
+            sb.append("17937,");
+            sb.append("EPIC,");
+            sb.append("2,");
+            sb.append("IN_PROGRESS,");
+            sb.append("2,");
+            sb.append("");
+            sb.append('\n');
+
+            sb.append('\n');
+            sb.append("2,1");
+            ///////*/
+            writer.write(sb.toString());
+            writer.close();
+            System.out.println("Done!\n\n");
+
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
