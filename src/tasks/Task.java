@@ -10,7 +10,7 @@ public class Task {
 
     protected Status status;
     protected TaskTypes taskType;
-
+    protected int parent;
 
     public Task(String name, String description, Status status)
     {
@@ -21,6 +21,7 @@ public class Task {
             this.status = status;
             this.taskType = TaskTypes.TASK;
             this.id = 17 * 31 * 31 + name.hashCode() * 31 + description.hashCode();
+            this.parent = this.id;
         }
     }
 
@@ -51,6 +52,14 @@ public class Task {
 
     public int getId() {
         return id;                                              // возвращаем хеш
+    }
+
+    public TaskTypes getTaskType() {
+        return taskType;
+    }
+
+    public int getParent() {
+        return parent;
     }
 
     @Override

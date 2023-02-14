@@ -214,6 +214,7 @@ public class Main {
                     FileBackedTasksManager localFileBackedTasksManager = new FileBackedTasksManager(localSaveFile);
                     //FileBackedTasksManager reposFileBackedTasksManager = new FileBackedTasksManager(documentsSaveFile);
 
+                    localFileBackedTasksManager.save();
                     //Надо потом убрать
                     //Files.deleteIfExists(localSaveFile);
                     //Files.deleteIfExists(documentsSaveFile);

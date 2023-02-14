@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class FileBackedTasksManager extends InMemoryTaskManager implements TaskManager
 {
@@ -27,8 +28,37 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
             startFile(saveFile);
     }
 
-    private void save()
+    public void save()
     {
+        StringBuilder result = new StringBuilder("id,type,name,status,description,epic\n");
+        for(Integer id : allTaskIDs)
+        {
+            //Добавляем поэтапно текущую задачу в StringBuilder
+            StringBuilder sb = new StringBuilder();
+            Task task = returnTask(id);
+            sb.append(task.getId() + ",");
+            sb.append(task.getTaskType() + ",");
+            sb.append(task.getName() + ",");
+            sb.append(task.getStatus() + ",");
+            sb.append(task.getDescription() + ",");
+            if(task.getTaskType().equals(TaskTypes.SUBTASK))
+                sb.append(task.getParent() + ",");
+
+            //Записываем в конечный StringBuilder
+            result.append(sb + "\n");
+        }
+        result.append("\n");
+
+        StringBuilder history = new StringBuilder();
+        List<Task> historyList = this.historyManager.getHistory();
+        for(Task task : historyList)
+            history.append(task.getId() + ",");
+        //Удаляю запятую в конце
+        history.deleteCharAt(history.length() - 1);
+
+        //Конечный ответ
+        result.append(history);
+        //System.out.println(result); System.out.println("--------------------------------------\n\n");
 
     }
 
@@ -37,7 +67,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         try (Reader reader = new FileReader(path.toFile())) {
             BufferedReader br = new BufferedReader(reader);
 
-            System.out.println("Trying to read strings from " + path);
+            //System.out.println("Trying to read strings from " + path);
             if(br.readLine().equals("id,type,name,status,description,epic"))
             {
                 int flag = 0;
@@ -92,7 +122,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                 System.out.println("Incorrect data in " + path);
             }
             br.close();
-            System.out.println("Done!\n");
+            //System.out.println("Done!\n");
 
         } catch (FileNotFoundException e) {
             System.out.println(e.getMessage());
@@ -115,27 +145,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
             sb.append("description,");
             sb.append("epic");
             sb.append('\n');
-
-            /*
-            sb.append("17905,");
-            sb.append("TASK,");
-            sb.append("1,");
-            sb.append("NEW,");
-            sb.append("1,");
-            sb.append("");
-            sb.append('\n');
-
-            sb.append("17937,");
-            sb.append("EPIC,");
-            sb.append("2,");
-            sb.append("IN_PROGRESS,");
-            sb.append("2,");
-            sb.append("");
-            sb.append('\n');
-
-            sb.append('\n');
-            sb.append("2,1");
-            ///////*/
             writer.write(sb.toString());
             writer.close();
             System.out.println("Done!\n");
