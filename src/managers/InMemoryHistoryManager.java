@@ -103,6 +103,7 @@ public class InMemoryHistoryManager extends Managers implements HistoryManager
         {
             head = null;
             tail = null;
+            size = 0;
             historyHashMap.clear();
         }
     }

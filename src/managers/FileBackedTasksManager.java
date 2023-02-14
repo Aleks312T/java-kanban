@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class FileBackedTasksManager extends InMemoryTaskManager implements TaskManager
 {
@@ -19,6 +20,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     public FileBackedTasksManager(Path saveFile) {
         super();
+        this.saveFile = saveFile;
         if(Files.exists(saveFile))
             loadFromFile(saveFile);
         else
@@ -51,10 +53,20 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                     //в data лежат данные по Task
                     switch (taskTypeFromString(data[1]))
                     {
-                        case TASK:
-                        case EPIC:
+                        //Такие костыли сделаны для того, чтобы типы нормально приводились друг к другу
+                        case TASK:{
+                            Task newTask = taskFromString(line);
+                            this.addTask(newTask);
+                            break;
+                        }
+                        case EPIC:{
+                            Epic newTask = (Epic) taskFromString(line);
+                            this.addTask(newTask);
+                            break;
+                        }
                         case SUBTASK: {
-                            this.addTask(taskFromString(line));
+                            SubTask newTask = (SubTask) taskFromString(line);
+                            this.addTask(newTask);
                             break;
                         }
                     }
@@ -64,7 +76,17 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                 String line = br.readLine();
                 String[] data = line.split(",");
 
-                //History manager
+                this.historyManager.clearHistory();
+                //for(String stringCode : data)
+                //Убран foreach с целью записи в обратном порядке
+                for(int i = data.length - 1; i >= 0 ; --i)
+                {
+                    String stringCode = data[i];
+                    int id = Integer.parseInt(stringCode);
+                    Task task = returnTaskWithoutHistory(id);
+                    this.historyManager.add(task);
+                }
+                //System.out.println(this.historyManager.getHistory().toString());
             } else
             {
                 System.out.println("Incorrect data in " + path);

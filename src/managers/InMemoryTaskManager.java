@@ -148,6 +148,27 @@ public class InMemoryTaskManager extends Managers implements TaskManager
         return result;
     }
 
+    protected Task returnTaskWithoutHistory(int id)
+    {
+        Task result;
+        if(tasks.containsKey(id))
+        {
+            result = tasks.get(id);
+            return result;
+        } else
+        if(epics.containsKey(id))
+        {
+            result = epics.get(id);
+            return result;
+        } else
+        if(subTasks.containsKey(id))
+        {
+            result = subTasks.get(id);
+            return result;
+        }
+        return null;
+    }
+
     @Override
     public void addTask(Task newTask)
     {

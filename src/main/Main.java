@@ -212,11 +212,11 @@ public class Main {
                     Path documentsSaveFile = Paths.get(documentsDirectory.toString(), "AleksSaveFile.txt");
 
                     FileBackedTasksManager localFileBackedTasksManager = new FileBackedTasksManager(localSaveFile);
-                    FileBackedTasksManager reposFileBackedTasksManager = new FileBackedTasksManager(documentsSaveFile);
+                    //FileBackedTasksManager reposFileBackedTasksManager = new FileBackedTasksManager(documentsSaveFile);
 
                     //Надо потом убрать
-                    Files.deleteIfExists(localSaveFile);
-                    Files.deleteIfExists(documentsSaveFile);
+                    //Files.deleteIfExists(localSaveFile);
+                    //Files.deleteIfExists(documentsSaveFile);
                 }
                 case(0):
                 {
