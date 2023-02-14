@@ -4,7 +4,6 @@ import main.Status;
 
 public class SubTask extends Task
 {
-    public int parent;
     public SubTask(String name, String description, Status status, int parent)
     {
         super(name, description, status);

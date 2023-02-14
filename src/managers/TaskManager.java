@@ -4,19 +4,20 @@ import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public interface TaskManager
 {
-    void addTask(Task newTask);
+    void addTask(Task newTask) throws IOException;
 
-    void addTask(Epic newTask);
+    void addTask(Epic newTask) throws IOException;
 
-    void addTask(SubTask newTask);
+    void addTask(SubTask newTask) throws IOException;
 
     Task returnTask(int id);
 
-    void deleteTask(int id);
+    void deleteTask(int id) throws IOException;
 
     int countEpics();
 
@@ -30,7 +31,7 @@ public interface TaskManager
 
     void printDoneTasks();
 
-    void deleteAllTasks();
+    void deleteAllTasks() throws IOException;
 
     void printAllCodes();
 }

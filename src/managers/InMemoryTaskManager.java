@@ -3,12 +3,13 @@ package managers;
 import tasks.*;
 import main.Status;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.HashMap;
 
 public class InMemoryTaskManager extends Managers implements TaskManager
 {
-
+    protected Set<Integer> allTaskIDs = new HashSet<>();
     private final HashMap<Integer, Task> tasks = new LinkedHashMap<>();
     private final HashMap <Integer, Epic> epics = new LinkedHashMap<>();
     private final HashMap <Integer, SubTask> subTasks = new LinkedHashMap<>();
@@ -170,13 +171,13 @@ public class InMemoryTaskManager extends Managers implements TaskManager
     }
 
     @Override
-    public void addTask(Task newTask)
-    {
+    public void addTask(Task newTask) throws IOException {
         if(newTask.getName() == null || newTask.getDescription() == null || newTask.getStatus() == null)
             return;
         if(newTask.getName().equals("") || newTask.getStatus() == Status.NONE)
             return;
 
+        allTaskIDs.add(newTask.getId());
         historyManager.add(newTask);
         if(!tasks.containsKey(newTask.getId()))
         {
@@ -196,7 +197,7 @@ public class InMemoryTaskManager extends Managers implements TaskManager
         }
     }
     @Override
-    public void addTask(Epic newTask)                                   //Решил вынести отдельную версию с tasks.Epic
+    public void addTask(Epic newTask) throws IOException                                   //Решил вынести отдельную версию с tasks.Epic
     {
         if(newTask.getName() == null || newTask.getDescription() == null || newTask.getStatus() == null)
             return;
@@ -204,6 +205,8 @@ public class InMemoryTaskManager extends Managers implements TaskManager
             return;
 
         Epic newEpic = new Epic(newTask.getName(), newTask.getDescription(), newTask.getStatus());
+        
+        allTaskIDs.add(newEpic.getId());
         historyManager.add(newEpic);
         if(!epics.containsKey(newTask.getId()))
         {
@@ -223,7 +226,7 @@ public class InMemoryTaskManager extends Managers implements TaskManager
         }
     }
     @Override
-    public void addTask(SubTask newTask)                                //Решил вынести отдельную версию с tasks.SubTask
+    public void addTask(SubTask newTask) throws IOException                                //Решил вынести отдельную версию с tasks.SubTask
     {
         if(newTask.getName() == null || newTask.getDescription() == null || newTask.getStatus() == null)
             return;
@@ -233,7 +236,7 @@ public class InMemoryTaskManager extends Managers implements TaskManager
         //Добавляю в эпик подзадачу
         for(Integer code : epics.keySet())
         {
-            if(code == newTask.parent)
+            if(code == newTask.getParent())
             {
                 Epic oldEpic = epics.get(code);
                 removeFromList(oldEpic);
@@ -246,6 +249,7 @@ public class InMemoryTaskManager extends Managers implements TaskManager
             }
         }
 
+        allTaskIDs.add(newTask.getId());
         historyManager.add(newTask);
         if(!subTasks.containsKey(newTask.getId()))
         {
@@ -289,21 +293,23 @@ public class InMemoryTaskManager extends Managers implements TaskManager
         return null;
     }
     @Override
-    public void deleteTask(int id)
-    {
+    public void deleteTask(int id) throws IOException {
         if(tasks.containsKey(id))
         {
             removeFromList(tasks.get(id));
+            allTaskIDs.remove(id);
             tasks.remove(id);
         } else
         if(epics.containsKey(id))
         {
             removeFromList(epics.get(id));
+            allTaskIDs.remove(id);
             epics.remove(id);
         } else
         if(subTasks.containsKey(id))
         {
             removeFromList(subTasks.get(id));
+            allTaskIDs.remove(id);
             subTasks.remove(id);
         }
     }
@@ -363,7 +369,7 @@ public class InMemoryTaskManager extends Managers implements TaskManager
         }
     }
     @Override
-    public void deleteAllTasks()                                        //Удаления ВСЕХ задач
+    public void deleteAllTasks() throws IOException                                        //Удаления ВСЕХ задач
     {
         tasks.clear();
         epics.clear();
