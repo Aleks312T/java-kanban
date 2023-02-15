@@ -214,6 +214,14 @@ public class Main {
                     FileBackedTasksManager localFileBackedTasksManager = new FileBackedTasksManager(localSaveFile);
                     //FileBackedTasksManager reposFileBackedTasksManager = new FileBackedTasksManager(documentsSaveFile);
                     localFileBackedTasksManager.addTask(new Task("qwerty", "нахуй", Status.NEW));
+                    List<Task> historyList = localFileBackedTasksManager.getHistory();
+
+                    int size = Integer.min(10, historyList.size());
+                    for(int i = 0; i < size; ++i)
+                        System.out.println((i + 1) + " - " + historyList.get(i));
+
+                    System.out.println();
+
                     localFileBackedTasksManager.save();
                     //Надо потом убрать
                     //Files.deleteIfExists(localSaveFile);

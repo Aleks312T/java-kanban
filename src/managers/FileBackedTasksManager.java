@@ -38,7 +38,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         {
             //Добавляем поэтапно текущую задачу в StringBuilder
             StringBuilder sb = new StringBuilder();
-            Task task = returnTask(id);
+            Task task = returnTaskWithoutHistory(id);
             sb.append(task.getId()).append(",");
             sb.append(task.getTaskType()).append(",");
             sb.append(task.getName()).append(",");
