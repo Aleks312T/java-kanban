@@ -98,11 +98,6 @@ public class InMemoryTaskManager extends Managers implements TaskManager
         return result;
     }
 
-    protected static String taskToString(Task task)
-    {
-        return task.toString();
-    }
-
     public static TaskTypes taskTypeFromString(String input)
     {
         TaskTypes result;
@@ -386,15 +381,6 @@ public class InMemoryTaskManager extends Managers implements TaskManager
     {
         //Добавил этот метод для демонстрации исправления "Можно лучше"
         System.out.println();
-        System.out.println("New задачи:");
-        System.out.println(newTasks);
-
-        System.out.println();
-        System.out.println("InProgress задачи:");
-        System.out.println(inProgressTasks);
-
-        System.out.println();
-        System.out.println("Done задачи:");
-        System.out.println(doneTasks);
+        System.out.println(allTaskIDs);
     }
 }

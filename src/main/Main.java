@@ -17,7 +17,10 @@ public class Main {
         // Поехали!
         final String HOME = System.getProperty("user.home");
         Scanner scanner = new Scanner(System.in);
-        InMemoryTaskManager taskManager = (InMemoryTaskManager) InMemoryTaskManager.getDefaultTaskManager();
+        //InMemoryTaskManager taskManager = (InMemoryTaskManager) InMemoryTaskManager.getDefaultTaskManager();
+
+        Path saveFile = Paths.get("SaveFile.txt");
+        FileBackedTasksManager taskManager = new FileBackedTasksManager(saveFile);
 
         System.out.println("Приветствую!");
         System.out.println();
@@ -202,33 +205,10 @@ public class Main {
                     System.out.println();
                     break;
                 }
-                case(11):
-                {
-                    Path localSaveFile = Paths.get("SaveFile.txt");
-
-                    // создание директории documentsDirectory
-                    Path documentsDirectory = Files.createDirectories(Paths.get(
-                            HOME,"Documents", "AleksRepository", "KanbanProject"));
-                    Path documentsSaveFile = Paths.get(documentsDirectory.toString(), "AleksSaveFile.txt");
-
-                    FileBackedTasksManager localFileBackedTasksManager = new FileBackedTasksManager(localSaveFile);
-                    //FileBackedTasksManager reposFileBackedTasksManager = new FileBackedTasksManager(documentsSaveFile);
-                    localFileBackedTasksManager.addTask(new Task("qwerty", "нахуй", Status.NEW));
-                    List<Task> historyList = localFileBackedTasksManager.getHistory();
-
-                    int size = Integer.min(10, historyList.size());
-                    for(int i = 0; i < size; ++i)
-                        System.out.println((i + 1) + " - " + historyList.get(i));
-
-                    System.out.println();
-
-                    localFileBackedTasksManager.save();
-                    //Надо потом убрать
-                    //Files.deleteIfExists(localSaveFile);
-                    //Files.deleteIfExists(documentsSaveFile);
-                }
                 case(0):
                 {
+                    //Автосохранение никто не отменял
+                    taskManager.save();
                     exit = 1;
                     break;
                 }
