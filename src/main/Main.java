@@ -213,7 +213,7 @@ public class Main {
 
                     FileBackedTasksManager localFileBackedTasksManager = new FileBackedTasksManager(localSaveFile);
                     //FileBackedTasksManager reposFileBackedTasksManager = new FileBackedTasksManager(documentsSaveFile);
-
+                    //localFileBackedTasksManager.addTask(new Task("qwerty", "нахуй", Status.NEW));
                     localFileBackedTasksManager.save();
                     //Надо потом убрать
                     //Files.deleteIfExists(localSaveFile);
