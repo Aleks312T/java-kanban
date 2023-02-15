@@ -28,8 +28,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         this.toSave = true;
     }
 
-    public void save() {
-        StringBuilder result = new StringBuilder("id,type,name,status,description,epic\n");
+    protected void save() {
+        StringBuilder result = new StringBuilder("id,type,name,status,description,epic" + System.lineSeparator());
         for(Integer id : allTaskIDs)
         {
             //Добавляем поэтапно текущую задачу в StringBuilder
@@ -44,9 +44,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                 sb.append(task.getParent()).append(",");
 
             //Записываем в конечный StringBuilder
-            result.append(sb).append("\n");
+            result.append(sb).append(System.lineSeparator());
         }
-        result.append("\n");
+        result.append(System.lineSeparator());
 
         StringBuilder history = new StringBuilder();
         List<Task> historyList = this.historyManager.getHistory();
@@ -141,10 +141,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
             sb.append("status,");
             sb.append("description,");
             sb.append("epic");
-            sb.append('\n');
+            sb.append(System.lineSeparator());
             writer.write(sb.toString());
             writer.close();
-            System.out.println("Done!\n");
+            System.out.println("Done!" + System.lineSeparator());
 
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -174,7 +174,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     @Override
     public Task returnTask(int id) {
-        return super.returnTask(id);
+        Task result = super.returnTask(id);
+        if(toSave)
+            save();
+        return result;
     }
 
     @Override

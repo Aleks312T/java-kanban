@@ -15,7 +15,6 @@ public class Main {
 
     public static void main(String[] args) throws Exception{
         // Поехали!
-        final String HOME = System.getProperty("user.home");
         Scanner scanner = new Scanner(System.in);
 
         Path saveFile = Paths.get("SaveFile.txt");
@@ -206,8 +205,6 @@ public class Main {
                 }
                 case(0):
                 {
-                    //Автосохранение никто не отменял
-                    taskManager.save();
                     exit = 1;
                     break;
                 }
@@ -251,7 +248,7 @@ public class Main {
 
     //Сделано с целью конвертации ввода из строки
     //в обычное число в обход возможных ошибок
-    public static int tryParseInt(String value) {
+    private static int tryParseInt(String value) {
         try {
             return Integer.parseInt(value);
         } catch (NumberFormatException e) {

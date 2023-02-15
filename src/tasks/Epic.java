@@ -33,9 +33,9 @@ public class Epic extends Task
         }
         if(inProgressTasks > 0)                                             //Если есть IN_PROGRESS, то и эпик тоже
             this.status = Status.IN_PROGRESS;
-        else if(doneTasks == 0 && inProgressTasks == 0)                     //Условие учитывает отсутствие подзадач
+        else if(doneTasks == 0)                     //Условие учитывает отсутствие подзадач
             this.status = Status.NEW;
-        else if(newTasks == 0 && doneTasks > 0 && inProgressTasks == 0)     //Условие для DONE
+        else if(newTasks == 0 && doneTasks > 0)     //Условие для DONE
             this.status = Status.DONE;
         else
             this.status = Status.IN_PROGRESS;                                    //Ситуация, когда только NEW и DONE
