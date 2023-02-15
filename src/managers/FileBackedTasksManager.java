@@ -28,7 +28,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         this.toSave = true;
     }
 
-    public void save() throws IOException {
+    public void save() {
         StringBuilder result = new StringBuilder("id,type,name,status,description,epic\n");
         for(Integer id : allTaskIDs)
         {
@@ -60,12 +60,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         try(Writer writer = new FileWriter(saveFile.toFile()))
         {
             writer.write(String.valueOf(result));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //System.out.println(result); System.out.println("--------------------------------------\n\n");
 
     }
 
@@ -74,7 +71,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         try (Reader reader = new FileReader(path.toFile())) {
             BufferedReader br = new BufferedReader(reader);
 
-            //System.out.println("Trying to read strings from " + path);
             if(br.readLine().equals("id,type,name,status,description,epic"))
             {
                 int flag = 0;
@@ -107,14 +103,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                             break;
                         }
                     }
-                    //System.out.println(line);
 
                 }
                 String line = br.readLine();
                 String[] data = line.split(",");
 
                 this.historyManager.clearHistory();
-                //for(String stringCode : data)
                 //Убран foreach с целью записи в обратном порядке
                 for(int i = data.length - 1; i >= 0 ; --i)
                 {
@@ -123,16 +117,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                     Task task = returnTaskWithoutHistory(id);
                     this.historyManager.add(task);
                 }
-                //System.out.println(this.historyManager.getHistory().toString());
             } else
             {
                 System.out.println("Incorrect data in " + path);
             }
             br.close();
-            //System.out.println("Done!\n");
 
-        } catch (FileNotFoundException e) {
-            System.out.println(e.getMessage());
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -156,8 +146,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
             writer.close();
             System.out.println("Done!\n");
 
-        } catch (FileNotFoundException e) {
-            System.out.println(e.getMessage());
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }

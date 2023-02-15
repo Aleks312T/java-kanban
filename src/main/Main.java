@@ -1,15 +1,15 @@
 package main;
 
 import managers.FileBackedTasksManager;
-import managers.InMemoryTaskManager;
-import managers.Managers;
-import tasks.*;
+import tasks.Epic;
+import tasks.SubTask;
+import tasks.Task;
 
-import java.io.*;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class Main {
 
@@ -17,7 +17,6 @@ public class Main {
         // Поехали!
         final String HOME = System.getProperty("user.home");
         Scanner scanner = new Scanner(System.in);
-        //InMemoryTaskManager taskManager = (InMemoryTaskManager) InMemoryTaskManager.getDefaultTaskManager();
 
         Path saveFile = Paths.get("SaveFile.txt");
         FileBackedTasksManager taskManager = new FileBackedTasksManager(saveFile);
@@ -237,8 +236,6 @@ public class Main {
             System.out.println("6 - Получение листа задач одного эпика");
             System.out.println("7 - Вывести все идентификаторы задач");
             System.out.println("8 - Вывести историю просмотров задач");
-            System.out.println("--------------------------------------");
-            System.out.println("11 - Создание менеджера с записью в файл");
             System.out.println("--------------------------------------");
             System.out.println("0 - Выход из программы");
             System.out.print("Введите команду: ");
