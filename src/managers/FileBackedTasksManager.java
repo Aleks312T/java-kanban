@@ -70,8 +70,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     {
         try (Reader reader = new FileReader(path.toFile())) {
             BufferedReader br = new BufferedReader(reader);
-
-            if(br.readLine().equals("id,type,name,status,description,epic"))
+            String firstLine = br.readLine();
+            if(!br.ready())
+            {
+                System.out.println("Входные данные не были найдены в " + path);
+            }
+            if(firstLine.equals("id,type,name,status,description,epic"))
             {
                 int flag = 0;
                 while (br.ready() && flag == 0) {
@@ -105,21 +109,27 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                     }
 
                 }
-                String line = br.readLine();
-                String[] data = line.split(",");
-
-                this.historyManager.clearHistory();
-                //Убран foreach с целью записи в обратном порядке
-                for(int i = data.length - 1; i >= 0 ; --i)
+                if(!br.ready())
                 {
-                    String stringCode = data[i];
-                    int id = Integer.parseInt(stringCode);
-                    Task task = returnTaskWithoutHistory(id);
-                    this.historyManager.add(task);
+                    System.out.println("Данные об истории не были найдены в " + path);
+                } else
+                {
+                    String line = br.readLine();
+                    String[] data = line.split(",");
+
+                    this.historyManager.clearHistory();
+                    //Убран foreach с целью записи в обратном порядке
+                    for(int i = data.length - 1; i >= 0 ; --i)
+                    {
+                        String stringCode = data[i];
+                        int id = Integer.parseInt(stringCode);
+                        Task task = returnTaskWithoutHistory(id);
+                        this.historyManager.add(task);
+                    }
                 }
             } else
             {
-                System.out.println("Incorrect data in " + path);
+                System.out.println("Некорректные данные в " + path);
             }
             br.close();
 

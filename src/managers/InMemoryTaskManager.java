@@ -1,9 +1,11 @@
 package managers;
 
+import com.sun.source.tree.Tree;
 import tasks.*;
 import main.Status;
 
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.HashMap;
 
@@ -18,7 +20,15 @@ public class InMemoryTaskManager extends Managers implements TaskManager
     protected ArrayList<Integer> inProgressTasks = new ArrayList<>();   //Но, наверно, лучше потратить память
     protected ArrayList<Integer> doneTasks = new ArrayList<>();         //Чем быстродействие
 
+    public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+    protected TreeMap timeIntersections = new TreeMap(Comparator.naturalOrder());
+
     InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
+
+    public DateTimeFormatter getFormatter()
+    {
+        return formatter;
+    }
 
     private void addToList(Task task)                 //Добавление в списки new, inProgress и done -Tasks
     {

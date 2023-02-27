@@ -7,6 +7,8 @@ import tasks.Task;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -16,9 +18,14 @@ public class Main {
     public static void main(String[] args) throws Exception{
         // Поехали!
         Scanner scanner = new Scanner(System.in);
-
         Path saveFile = Paths.get("SaveFile.txt");
         FileBackedTasksManager taskManager = new FileBackedTasksManager(saveFile);
+        DateTimeFormatter formatter = taskManager.getFormatter();
+
+        LocalDateTime startTime = LocalDateTime.now();
+        startTime = startTime.minusNanos(startTime.getNano());
+        System.out.println(startTime.format(formatter));
+        System.out.println(startTime.hashCode());
 
         System.out.println("Приветствую!");
         System.out.println();
@@ -208,6 +215,88 @@ public class Main {
                     exit = 1;
                     break;
                 }
+                case(11):
+                {
+                    System.out.println("Выбрана команда 1");
+                    System.out.println("Введите имя");
+                    String name;
+                    name = scanner.nextLine();
+
+                    System.out.println("Введите описание");
+                    String description = scanner.nextLine();
+
+                    System.out.println("Введите статус");
+                    System.out.println("1 - NEW; 2 - IN_PROGRESS; 3 - DONE");
+                    String input = scanner.nextLine();
+                    int intInput = tryParseInt(input);
+                    Status status;
+                    switch (intInput) {
+                        case 1: {
+                            status = Status.NEW;
+                            break;
+                        }
+                        case 2: {
+                            status = Status.IN_PROGRESS;
+                            break;
+                        }
+                        case 3: {
+                            status = Status.DONE;
+                            break;
+                        }
+                        default:
+                            status = Status.NONE;
+                    }
+
+                    System.out.println("Введите время начала в формате:");
+                    System.out.println(formatter);
+                    input = scanner.nextLine();
+                    try {
+                        LocalDateTime localDateTime = LocalDateTime.parse(input, formatter);
+                    } catch (Exception exception)
+                    {
+                        System.out.println("Неверный формат ввода даты!");
+                        continue;
+                    }
+
+                    System.out.println("Введите тип задачи (Task; Epic; SubTask)");
+                    System.out.println("1 - Task; 2 - Epic; 3 - SubTask");
+                    input = scanner.nextLine();
+                    intInput = tryParseInt(input);
+                    switch (intInput) {
+                        case 1: {
+                            Task newTask = new Task(name, description, status);
+                            taskManager.addTask(newTask);
+                            break;
+                        }
+                        case 2: {
+                            Epic newTask = new Epic(name, description, status);
+                            taskManager.addTask(newTask);
+                            break;
+                        }
+                        case 3: {
+                            if(taskManager.countEpics() > 0)
+                            {
+                                System.out.print("Введите код tasks.Epic задачи: ");
+                                String id = scanner.nextLine();
+                                int intId = tryParseInt(id);
+                                if(taskManager.containEpic(intId))
+                                {
+                                    SubTask newTask = new SubTask(name, description, status, intId);
+                                    taskManager.addTask(newTask);
+                                } else
+                                    System.out.print("Ошибка, такого эпика нет");
+
+                            } else
+                            {
+                                System.out.print("Невозможно создать, т.к. нет tasks.Epic задач");
+                            }
+                            break;
+                        }
+                        default:
+                            System.out.println("Некорректный тип задачи");
+                    }
+                    break;
+                }
                 default:
                     System.out.println("Такой команды нет!");
             }
@@ -234,6 +323,8 @@ public class Main {
             System.out.println("7 - Вывести все идентификаторы задач");
             System.out.println("8 - Вывести историю просмотров задач");
             System.out.println("--------------------------------------");
+            System.out.println("11 - Добавление задачи со временем");
+            System.out.println("12 - ");
             System.out.println("0 - Выход из программы");
             System.out.print("Введите команду: ");
 

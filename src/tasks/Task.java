@@ -6,17 +6,17 @@ import java.util.Objects;
 import main.Status;
 
 public class Task {
-    private String name;
-    private String description;
-    private int id;                                           //Пускай это будет и id задачи, и хэш-кодом
+    protected String name;
+    protected String description;
+    protected int id;                                           //Пускай это будет и id задачи, и хэш-кодом
 
     protected Status status;
     protected TaskTypes taskType;
     protected int parent;
 
-    protected static LocalDateTime startTime;                  //Время начала выполнения задачи
-    protected static LocalDateTime endTime;                    //Время окончания выполнения задачи
-    protected static Duration duration;                        //Длительность выполнения задачи
+    protected LocalDateTime startTime;                  //Время начала выполнения задачи
+    protected LocalDateTime endTime;                    //Время окончания выполнения задачи
+    protected Duration duration;                        //Длительность выполнения задачи
 
     public Task(String name, String description, Status status)
     {
@@ -26,12 +26,48 @@ public class Task {
             this.description = description;
             this.status = status;
             this.taskType = TaskTypes.TASK;
-            startTime = LocalDateTime.now();
-            duration = Duration.ofHours(1);
-            endTime = startTime.plus(duration);
+            this.startTime = LocalDateTime.now();
+            this.startTime = this.startTime.minusNanos(this.startTime.getNano());
+            this.duration = Duration.ofHours(1);
+            this.endTime = startTime.plus(duration);
             //В учет HashCode / ID идет имя, описание, время начала и длительность.
-            this.id = 17 * 923521 + name.hashCode() * 29791 + description.hashCode() * 961 +
-                    startTime.hashCode() * 31 + duration.hashCode();
+            this.id = 17 * 961 + name.hashCode() * 31 + description.hashCode();
+            this.parent = this.id;
+        }
+    }
+
+    public Task(String name, String description, Status status, LocalDateTime localDateTime)
+    {
+        if(name != null && description != null && status != null && status != Status.NONE)
+        {
+            this.name = name;
+            this.description = description;
+            this.status = status;
+            this.taskType = TaskTypes.TASK;
+            this.startTime = localDateTime;
+            this.startTime = this.startTime.minusNanos(this.startTime.getNano());
+            this.duration = Duration.ofHours(1);
+            this.endTime = startTime.plus(duration);
+            //В учет HashCode / ID идет имя, описание, время начала и длительность.
+            this.id = 17 * 961 + name.hashCode() * 31 + description.hashCode();
+            this.parent = this.id;
+        }
+    }
+
+    public Task(String name, String description, Status status, LocalDateTime localDateTime, Duration duration)
+    {
+        if(name != null && description != null && status != null && status != Status.NONE)
+        {
+            this.name = name;
+            this.description = description;
+            this.status = status;
+            this.taskType = TaskTypes.TASK;
+            this.startTime = localDateTime;
+            this.startTime = this.startTime.minusNanos(this.startTime.getNano());
+            this.duration = duration;
+            this.endTime = startTime.plus(duration);
+            //В учет HashCode / ID идет имя, описание
+            this.id = 17 * 961 + name.hashCode() * 31 + description.hashCode();
             this.parent = this.id;
         }
     }
@@ -69,15 +105,15 @@ public class Task {
         return taskType;
     }
 
-    public static LocalDateTime getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public static LocalDateTime getEndTime() {
+    public LocalDateTime getEndTime() {
         return endTime;
     }
 
-    public static Duration getDuration() {
+    public Duration getDuration() {
         return duration;
     }
 
@@ -87,12 +123,16 @@ public class Task {
 
     @Override
     public String toString() {
-
-        return "tasks.Task{" +
+        return "Task{" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", id=" + id +
-                ", status='" + status + '\'' +
+                ", status=" + status +
+                ", taskType=" + taskType +
+                ", parent=" + parent +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", duration=" + duration +
                 '}';
     }
 
