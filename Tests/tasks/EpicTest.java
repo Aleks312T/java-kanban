@@ -14,27 +14,14 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 class EpicTest {
-
-    public static LocalDateTime startTime;
-    public static LocalDateTime endTime;
-    public static Duration duration;
-
     @BeforeAll
     public static void beforeAll()
     {
-        startTime = LocalDateTime.now();
+        //startTime = LocalDateTime.now();
     }
 
     @Test
     void changeStatus() {
-    }
-
-    @Test
-    void addSubTask() {
-    }
-
-    @Test
-    void getSubTasks() {
     }
 
     @Test
@@ -44,8 +31,8 @@ class EpicTest {
     @AfterAll
     public static void afterAll()
     {
-        endTime = LocalDateTime.now();
-        duration = Duration.between(startTime, endTime);
+        //endTime = LocalDateTime.now();
+        //duration = Duration.between(startTime, endTime);
 
     }
 }
