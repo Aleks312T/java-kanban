@@ -1,5 +1,8 @@
 package tasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import main.Status;
@@ -9,6 +12,18 @@ public class Epic extends Task
     public Epic(String name, String description, Status status)
     {
         super(name, description, status);
+        this.taskType = TaskTypes.EPIC;
+    }
+
+    public Epic(String name, String description, Status status, LocalDateTime localDateTime)
+    {
+        super(name, description, status, localDateTime);
+        this.taskType = TaskTypes.EPIC;
+    }
+
+    public Epic(String name, String description, Status status, LocalDateTime localDateTime, Duration duration)
+    {
+        super(name, description, status, localDateTime, duration);
         this.taskType = TaskTypes.EPIC;
     }
 
@@ -57,6 +72,8 @@ public class Epic extends Task
 
     @Override
     public String toString() {
+        long s = duration.getSeconds();
+        String durationOutput = String.format("%d:%02d:%02d", s / 3600, (s % 3600) / 60, (s % 60));
         return "Epic{" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
@@ -64,9 +81,9 @@ public class Epic extends Task
                 ", status=" + status +
                 ", taskType=" + taskType +
                 ", parent=" + parent +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", duration=" + duration +
+                ", startTime=" + startTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")) +
+                ", endTime=" + endTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")) +
+                ", duration=" + durationOutput +
                 '}';
     }
 }

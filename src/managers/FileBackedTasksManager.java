@@ -23,13 +23,17 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         if(Files.exists(saveFile))
             loadFromFile(saveFile);
         else
+        {
+            //Надо дописать корректное создание файла сохранения
             startFile(saveFile);
+        }
 
         this.toSave = true;
     }
 
     protected void save() {
-        StringBuilder result = new StringBuilder("id,type,name,status,description,epic" + System.lineSeparator());
+        StringBuilder result = new StringBuilder(
+                "id,type,name,status,description,startTime,duration,epic" + System.lineSeparator());
         for(Integer id : allTaskIDs)
         {
             //Добавляем поэтапно текущую задачу в StringBuilder
@@ -40,6 +44,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
             sb.append(task.getName()).append(",");
             sb.append(task.getStatus()).append(",");
             sb.append(task.getDescription()).append(",");
+            sb.append(task.getStartTime().format(formatter)).append(",");
+            sb.append(task.getDuration().getSeconds()).append(",");
             if(task.getTaskType().equals(TaskTypes.SUBTASK))
                 sb.append(task.getParent()).append(",");
 
@@ -75,7 +81,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
             {
                 System.out.println("Входные данные не были найдены в " + path);
             }
-            if(firstLine.equals("id,type,name,status,description,epic"))
+            if(firstLine.equals("id,type,name,status,description,startTime,duration,epic"))
             {
                 int flag = 0;
                 while (br.ready() && flag == 0) {

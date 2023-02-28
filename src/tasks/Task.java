@@ -2,6 +2,7 @@ package tasks;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import main.Status;
 
@@ -123,6 +124,8 @@ public class Task {
 
     @Override
     public String toString() {
+        long s = duration.getSeconds();
+        String durationOutput = String.format("%d:%02d:%02d", s / 3600, (s % 3600) / 60, (s % 60));
         return "Task{" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
@@ -130,9 +133,9 @@ public class Task {
                 ", status=" + status +
                 ", taskType=" + taskType +
                 ", parent=" + parent +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", duration=" + duration +
+                ", startTime=" + startTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")) +
+                ", endTime=" + endTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")) +
+                ", duration=" + durationOutput +
                 '}';
     }
 

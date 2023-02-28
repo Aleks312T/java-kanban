@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.List;
 import java.util.Scanner;
 
@@ -21,11 +22,7 @@ public class Main {
         Path saveFile = Paths.get("SaveFile.txt");
         FileBackedTasksManager taskManager = new FileBackedTasksManager(saveFile);
         DateTimeFormatter formatter = taskManager.getFormatter();
-
-        LocalDateTime startTime = LocalDateTime.now();
-        startTime = startTime.minusNanos(startTime.getNano());
-        System.out.println(startTime.format(formatter));
-        System.out.println(startTime.hashCode());
+        String formatterString = taskManager.getFormatterString();
 
         System.out.println("Приветствую!");
         System.out.println();
@@ -248,10 +245,11 @@ public class Main {
                     }
 
                     System.out.println("Введите время начала в формате:");
-                    System.out.println(formatter);
+                    System.out.println(formatterString);
+                    LocalDateTime localDateTime;
                     input = scanner.nextLine();
                     try {
-                        LocalDateTime localDateTime = LocalDateTime.parse(input, formatter);
+                        localDateTime = LocalDateTime.parse(input, formatter);
                     } catch (Exception exception)
                     {
                         System.out.println("Неверный формат ввода даты!");
@@ -264,12 +262,12 @@ public class Main {
                     intInput = tryParseInt(input);
                     switch (intInput) {
                         case 1: {
-                            Task newTask = new Task(name, description, status);
+                            Task newTask = new Task(name, description, status, localDateTime);
                             taskManager.addTask(newTask);
                             break;
                         }
                         case 2: {
-                            Epic newTask = new Epic(name, description, status);
+                            Epic newTask = new Epic(name, description, status, localDateTime);
                             taskManager.addTask(newTask);
                             break;
                         }
@@ -281,7 +279,7 @@ public class Main {
                                 int intId = tryParseInt(id);
                                 if(taskManager.containEpic(intId))
                                 {
-                                    SubTask newTask = new SubTask(name, description, status, intId);
+                                    SubTask newTask = new SubTask(name, description, status, localDateTime, intId);
                                     taskManager.addTask(newTask);
                                 } else
                                     System.out.print("Ошибка, такого эпика нет");

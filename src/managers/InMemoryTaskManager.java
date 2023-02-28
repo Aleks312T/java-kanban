@@ -5,6 +5,8 @@ import tasks.*;
 import main.Status;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.HashMap;
@@ -20,14 +22,19 @@ public class InMemoryTaskManager extends Managers implements TaskManager
     protected ArrayList<Integer> inProgressTasks = new ArrayList<>();   //Но, наверно, лучше потратить память
     protected ArrayList<Integer> doneTasks = new ArrayList<>();         //Чем быстродействие
 
-    public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-    protected TreeMap timeIntersections = new TreeMap(Comparator.naturalOrder());
+    protected static String formatterString = "dd.MM.yyyy HH:mm";
+    protected static DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatterString);
+    protected TreeMap<Integer, Integer> timeIntersections = new TreeMap<>(Comparator.naturalOrder());
 
     InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
 
     public DateTimeFormatter getFormatter()
     {
         return formatter;
+    }
+    public String getFormatterString()
+    {
+        return formatterString;
     }
 
     private void addToList(Task task)                 //Добавление в списки new, inProgress и done -Tasks
@@ -134,22 +141,45 @@ public class InMemoryTaskManager extends Managers implements TaskManager
     {
         String[] split = value.split(",");
         Task result;
-        if(split.length == 5 || (split.length == 6 && stringToStatus(split[3]) != Status.NONE)) {
-            switch (split[1])
+        if(split.length == 7 || (split.length == 8 && stringToStatus(split[3]) != Status.NONE)) {
+            if(split[5] != "" && split[6] != "")
             {
-                case "TASK":
-                    result = new Task(split[2], split[4], stringToStatus(split[3]));
-                    break;
-                case "EPIC":
-                    result = new Epic(split[2], split[4], stringToStatus(split[3]));
-                    break;
-                case "SUBTASK":
-                    result = new SubTask(split[2], split[4], stringToStatus(split[3]), Integer.parseInt(split[5]));
-                break;
-                default:
-                    result = null;
-                    break;
-            }
+                LocalDateTime localDateTime = LocalDateTime.parse(split[5], formatter);
+                Duration duration = Duration.ofMillis(Long.decode(split[6]));
+                //Создание задачи с временными рамками
+                switch (split[1])
+                {
+                    case "TASK":
+                        result = new Task(split[2], split[4], stringToStatus(split[3]), localDateTime, duration);
+                        break;
+                    case "EPIC":
+                        result = new Epic(split[2], split[4], stringToStatus(split[3]), localDateTime, duration);
+                        break;
+                    case "SUBTASK":
+                        result = new SubTask(split[2], split[4], stringToStatus(split[3]), localDateTime, duration,
+                                Integer.parseInt(split[7]));
+                        break;
+                    default:
+                        result = null;
+                        break;
+                }
+            } else
+                switch (split[1])
+                {
+                    case "TASK":
+                        result = new Task(split[2], split[4], stringToStatus(split[3]));
+                        break;
+                    case "EPIC":
+                        result = new Epic(split[2], split[4], stringToStatus(split[3]));
+                        break;
+                    case "SUBTASK":
+                        result = new SubTask(split[2], split[4], stringToStatus(split[3]), Integer.parseInt(split[7]));
+                        break;
+                    default:
+                        result = null;
+                        break;
+                }
+
         } else return null;
         return result;
     }
