@@ -24,7 +24,10 @@ public class InMemoryTaskManager extends Managers implements TaskManager
 
     protected static String formatterString = "dd.MM.yyyy HH:mm";
     protected static DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatterString);
-    protected TreeMap<Integer, Integer> timeIntersections = new TreeMap<>(Comparator.naturalOrder());
+    //protected TreeMap<Integer, Integer> timeIntersections = new TreeMap<>(Comparator.naturalOrder());
+
+    TaskTimeComparator taskTimeComparator = new TaskTimeComparator();
+    protected TreeSet<Task> sortedTasks = new TreeSet<>(taskTimeComparator);
 
     InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
 
@@ -139,10 +142,12 @@ public class InMemoryTaskManager extends Managers implements TaskManager
 
     protected static Task taskFromString(String value)       //Надо проверить условие
     {
+        if(value == null)
+            return null;
         String[] split = value.split(",");
         Task result;
         if(split.length == 7 || (split.length == 8 && stringToStatus(split[3]) != Status.NONE)) {
-            if(split[5] != "" && split[6] != "")
+            if(!split[5].equals("") && !split[6].equals(""))
             {
                 LocalDateTime localDateTime = LocalDateTime.parse(split[5], formatter);
                 Duration duration = Duration.ofMillis(Long.decode(split[6]));
