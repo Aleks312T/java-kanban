@@ -34,7 +34,7 @@ public class SubTask extends Task
     public String toString() {
         long s = duration.getSeconds();
         String durationOutput = String.format("%02d:%02d:%02d", s / 3600, (s % 3600) / 60, (s % 60));
-        return "Epic{" +
+        return "SubTask{" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", id=" + id +

@@ -14,13 +14,13 @@ import java.util.HashMap;
 public class InMemoryTaskManager extends Managers implements TaskManager
 {
     protected Set<Integer> allTaskIDs = new HashSet<>();
-    private final HashMap<Integer, Task> tasks = new LinkedHashMap<>();
-    private final HashMap <Integer, Epic> epics = new LinkedHashMap<>();
-    private final HashMap <Integer, SubTask> subTasks = new LinkedHashMap<>();
+    private final HashMap<Integer, Task> tasks = new LinkedHashMap<>(10);
+    private final HashMap <Integer, Epic> epics = new LinkedHashMap<>(10);
+    private final HashMap <Integer, SubTask> subTasks = new LinkedHashMap<>(10);
 
-    protected ArrayList<Integer> newTasks = new ArrayList<>();          //Не уверен, что стоит дублировать
-    protected ArrayList<Integer> inProgressTasks = new ArrayList<>();   //Но, наверно, лучше потратить память
-    protected ArrayList<Integer> doneTasks = new ArrayList<>();         //Чем быстродействие
+    protected ArrayList<Integer> newTasks = new ArrayList<>(10);       //Не уверен, что стоит дублировать
+    protected ArrayList<Integer> inProgressTasks = new ArrayList<>(10);//Но, наверно, лучше потратить память
+    protected ArrayList<Integer> doneTasks = new ArrayList<>(10);      //Чем быстродействие
 
     protected static String formatterString = "dd.MM.yyyy HH:mm";
     protected static DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatterString);
@@ -482,6 +482,9 @@ public class InMemoryTaskManager extends Managers implements TaskManager
         newTasks.clear();
         inProgressTasks.clear();
         doneTasks.clear();
+
+        allTaskIDs.clear();
+        sortedTasks.clear();
 
         historyManager.clearHistory();
     }

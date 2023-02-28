@@ -58,10 +58,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
         StringBuilder history = new StringBuilder();
         List<Task> historyList = this.historyManager.getHistory();
-        for(Task task : historyList)
-            history.append(task.getId()).append(",");
-        //Удаляю запятую в конце
-        history.deleteCharAt(history.length() - 1);
+        if(historyList != null && !historyList.isEmpty())
+        {
+            for(Task task : historyList)
+                history.append(task.getId()).append(",");
+            //Удаляю запятую в конце
+            history.deleteCharAt(history.length() - 1);
+        }
 
         //Конечный ответ
         result.append(history);

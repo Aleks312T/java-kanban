@@ -29,7 +29,7 @@ public class Epic extends Task
 
     protected ArrayList <SubTask> subTasks = new ArrayList<>();
 
-    public void changeStatus()
+    protected void changeStatus()
     {
         int newTasks = 0;
         int doneTasks = 0;
