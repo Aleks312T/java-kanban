@@ -61,6 +61,8 @@ public class Epic extends Task
         if(subTask != null)
         {
             subTasks.add(subTask);
+            this.duration = this.duration.plus(subTask.duration);
+            this.endTime = this.startTime.plus(this.duration);
             this.changeStatus();
         }
     }
