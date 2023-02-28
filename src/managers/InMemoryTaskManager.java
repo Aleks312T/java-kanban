@@ -24,7 +24,6 @@ public class InMemoryTaskManager extends Managers implements TaskManager
 
     protected static String formatterString = "dd.MM.yyyy HH:mm";
     protected static DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatterString);
-    //protected TreeMap<Integer, Integer> timeIntersections = new TreeMap<>(Comparator.naturalOrder());
 
     TaskTimeComparator taskTimeComparator = new TaskTimeComparator();
     protected TreeSet<Task> sortedTasks = new TreeSet<>(taskTimeComparator);
@@ -38,6 +37,55 @@ public class InMemoryTaskManager extends Managers implements TaskManager
     public String getFormatterString()
     {
         return formatterString;
+    }
+
+    private boolean taskCanBeAdded(Task task)                 //
+    {
+        if(sortedTasks.isEmpty())
+        {
+            //sortedTasks.add(task);
+            return true;
+        }
+        else
+        {
+            int flag = 0;
+            //Чтобы было легче ориентироваться
+            LocalDateTime currentStartTime;
+            LocalDateTime currentEndTime;
+            LocalDateTime taskStartTime = task.getStartTime();
+            LocalDateTime taskEndTime = task.getEndTime();
+
+            //Не уверен, что сделал верно, не помешала бы консультация
+            for(Task currentTask : sortedTasks)
+            {
+                currentStartTime = currentTask.getStartTime();
+                currentEndTime = currentTask.getEndTime();
+
+                if(taskEndTime.isBefore(currentStartTime))
+                {
+                    continue;
+                }
+                else
+                if(currentEndTime.isBefore(taskStartTime))
+                {
+                    flag = 1;
+                    break;
+                } else
+                {
+                    flag = -1;
+                    break;
+                }
+            }
+
+            if(flag == -1)
+            {
+                return false;
+            } else
+            {
+                //sortedTasks.add(task);
+                return true;
+            }
+        }
     }
 
     private void addToList(Task task)                 //Добавление в списки new, inProgress и done -Tasks
@@ -150,7 +198,7 @@ public class InMemoryTaskManager extends Managers implements TaskManager
             if(!split[5].equals("") && !split[6].equals(""))
             {
                 LocalDateTime localDateTime = LocalDateTime.parse(split[5], formatter);
-                Duration duration = Duration.ofMillis(Long.decode(split[6]));
+                Duration duration = Duration.ofSeconds(Long.decode(split[6]));
                 //Создание задачи с временными рамками
                 switch (split[1])
                 {
@@ -211,14 +259,18 @@ public class InMemoryTaskManager extends Managers implements TaskManager
     }
 
     @Override
-    public void addTask(Task newTask) throws IOException {
+    public boolean addTask(Task newTask) throws IOException {
         if(newTask.getName() == null || newTask.getDescription() == null || newTask.getStatus() == null)
-            return;
+            return false;
         if(newTask.getName().equals("") || newTask.getStatus() == Status.NONE)
-            return;
+            return false;
+        //Проверка на пересечения
+        if(!taskCanBeAdded(newTask))
+            return false;
 
         allTaskIDs.add(newTask.getId());
         historyManager.add(newTask);
+        sortedTasks.add(newTask);
         if(!tasks.containsKey(newTask.getId()))
         {
             tasks.put(newTask.getId(), newTask);
@@ -235,20 +287,25 @@ public class InMemoryTaskManager extends Managers implements TaskManager
             }
             tasks.replace(newTask.getId(), newTask);
         }
+        return true;
     }
     @Override
-    public void addTask(Epic newTask) throws IOException                                   //Решил вынести отдельную версию с tasks.Epic
+    public boolean addTask(Epic newTask) throws IOException                                   //Решил вынести отдельную версию с tasks.Epic
     {
         if(newTask.getName() == null || newTask.getDescription() == null || newTask.getStatus() == null)
-            return;
+            return false;
         if(newTask.getName().equals("") || newTask.getStatus() == Status.NONE)
-            return;
+            return false;
+        //Проверка на пересечения
+        if(!taskCanBeAdded(newTask))
+            return false;
 
         Epic newEpic = new Epic(newTask.getName(), newTask.getDescription(), newTask.getStatus(),
                 newTask.getStartTime(), newTask.getDuration());
 
         allTaskIDs.add(newEpic.getId());
         historyManager.add(newEpic);
+        sortedTasks.add(newTask);
         if(!epics.containsKey(newTask.getId()))
         {
             epics.put(newTask.getId(), newEpic);
@@ -265,14 +322,18 @@ public class InMemoryTaskManager extends Managers implements TaskManager
             }
             epics.replace(newTask.getId(), newEpic);
         }
+        return true;
     }
     @Override
-    public void addTask(SubTask newTask) throws IOException                                //Решил вынести отдельную версию с tasks.SubTask
+    public boolean addTask(SubTask newTask) throws IOException                                //Решил вынести отдельную версию с tasks.SubTask
     {
         if(newTask.getName() == null || newTask.getDescription() == null || newTask.getStatus() == null)
-            return;
+            return false;
         if(newTask.getName().equals("") || newTask.getStatus() == Status.NONE)
-            return;
+            return false;
+        //Проверка на пересечения
+        if(!taskCanBeAdded(newTask))
+            return false;
 
         //Добавляю в эпик подзадачу
         for(Integer code : epics.keySet())
@@ -292,6 +353,7 @@ public class InMemoryTaskManager extends Managers implements TaskManager
 
         allTaskIDs.add(newTask.getId());
         historyManager.add(newTask);
+        sortedTasks.add(newTask);
         if(!subTasks.containsKey(newTask.getId()))
         {
             subTasks.put(newTask.getId(), newTask);
@@ -308,6 +370,7 @@ public class InMemoryTaskManager extends Managers implements TaskManager
             }
             subTasks.replace(newTask.getId(), newTask);
         }
+        return true;
     }
     @Override
     public Task returnTask(int id)

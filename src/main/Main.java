@@ -287,12 +287,18 @@ public class Main {
                     switch (intInput) {
                         case 1: {
                             Task newTask = new Task(name, description, status, localDateTime, duration);
-                            taskManager.addTask(newTask);
+                            if(taskManager.addTask(newTask))
+                                System.out.println("Задача добавлена");
+                            else
+                                System.out.println("Произошла ошибка");
                             break;
                         }
                         case 2: {
                             Epic newTask = new Epic(name, description, status, localDateTime, duration);
-                            taskManager.addTask(newTask);
+                            if(taskManager.addTask(newTask))
+                                System.out.println("Задача добавлена");
+                            else
+                                System.out.println("Произошла ошибка");
                             break;
                         }
                         case 3: {
@@ -305,7 +311,10 @@ public class Main {
                                 {
                                     SubTask newTask = new SubTask(name, description, status,
                                             localDateTime, duration, intId);
-                                    taskManager.addTask(newTask);
+                                    if(taskManager.addTask(newTask))
+                                        System.out.println("Задача добавлена");
+                                    else
+                                        System.out.println("Произошла ошибка");
                                 } else
                                     System.out.print("Ошибка, такого эпика нет");
 

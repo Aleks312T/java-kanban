@@ -172,24 +172,27 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     }
 
     @Override
-    public void addTask(Task newTask) throws IOException {
-        super.addTask(newTask);
-        if(toSave)
+    public boolean addTask(Task newTask) throws IOException {
+        boolean result = super.addTask(newTask);
+        if(toSave && result)
             save();
+        return result;
     }
 
     @Override
-    public void addTask(Epic newTask) throws IOException {
-        super.addTask(newTask);
-        if(toSave)
+    public boolean addTask(Epic newTask) throws IOException {
+        boolean result = super.addTask(newTask);
+        if(toSave && result)
             save();
+        return result;
     }
 
     @Override
-    public void addTask(SubTask newTask) throws IOException {
-        super.addTask(newTask);
-        if(toSave)
+    public boolean addTask(SubTask newTask) throws IOException {
+        boolean result = super.addTask(newTask);
+        if(toSave && result)
             save();
+        return result;
     }
 
     @Override

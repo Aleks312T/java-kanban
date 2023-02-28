@@ -9,11 +9,11 @@ import java.util.ArrayList;
 
 public interface TaskManager
 {
-    void addTask(Task newTask) throws IOException;
+    boolean addTask(Task newTask) throws IOException;
 
-    void addTask(Epic newTask) throws IOException;
+    boolean addTask(Epic newTask) throws IOException;
 
-    void addTask(SubTask newTask) throws IOException;
+    boolean addTask(SubTask newTask) throws IOException;
 
     Task returnTask(int id);
 
