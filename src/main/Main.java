@@ -5,6 +5,7 @@ import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -251,6 +252,12 @@ public class Main {
                     input = scanner.nextLine();
                     try {
                         localDateTime = LocalDateTime.parse(input, formatter);
+                        if(localDateTime.isBefore(LocalDateTime.now()))
+                            throw new IOException();
+                    } catch (IOException exception)
+                    {
+                        System.out.println("Дата должна быть не раньше текущего момента!");
+                        continue;
                     } catch (Exception exception)
                     {
                         System.out.println("Неверный формат ввода даты!");
