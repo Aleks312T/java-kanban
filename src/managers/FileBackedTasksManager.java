@@ -44,8 +44,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
             sb.append(task.getName()).append(",");
             sb.append(task.getStatus()).append(",");
             sb.append(task.getDescription()).append(",");
+
             sb.append(task.getStartTime().format(formatter)).append(",");
             sb.append(task.getDuration().getSeconds()).append(",");
+
             if(task.getTaskType().equals(TaskTypes.SUBTASK))
                 sb.append(task.getParent()).append(",");
 
@@ -156,6 +158,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
             sb.append("name,");
             sb.append("status,");
             sb.append("description,");
+            sb.append("startTime,");
+            sb.append("duration,");
             sb.append("epic");
             sb.append(System.lineSeparator());
             writer.write(sb.toString());

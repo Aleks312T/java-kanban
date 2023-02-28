@@ -7,6 +7,7 @@ import tasks.Task;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -256,18 +257,34 @@ public class Main {
                         continue;
                     }
 
+                    System.out.println("Введите длительность в формате:");
+                    System.out.println("HH:mm:ss");
+                    Duration duration;
+                    input = scanner.nextLine();
+                    try {
+                        String[] temp = input.split(":");
+                        int hours = Integer.parseInt(temp[0]);
+                        int minutes = Integer.parseInt(temp[1]);
+                        int seconds = Integer.parseInt(temp[2]);
+                        duration = Duration.ofHours(hours).plusMinutes(minutes).plusSeconds(seconds);
+                    } catch (Exception exception)
+                    {
+                        System.out.println("Неверный формат ввода!");
+                        continue;
+                    }
+
                     System.out.println("Введите тип задачи (Task; Epic; SubTask)");
                     System.out.println("1 - Task; 2 - Epic; 3 - SubTask");
                     input = scanner.nextLine();
                     intInput = tryParseInt(input);
                     switch (intInput) {
                         case 1: {
-                            Task newTask = new Task(name, description, status, localDateTime);
+                            Task newTask = new Task(name, description, status, localDateTime, duration);
                             taskManager.addTask(newTask);
                             break;
                         }
                         case 2: {
-                            Epic newTask = new Epic(name, description, status, localDateTime);
+                            Epic newTask = new Epic(name, description, status, localDateTime, duration);
                             taskManager.addTask(newTask);
                             break;
                         }
@@ -279,7 +296,8 @@ public class Main {
                                 int intId = tryParseInt(id);
                                 if(taskManager.containEpic(intId))
                                 {
-                                    SubTask newTask = new SubTask(name, description, status, localDateTime, intId);
+                                    SubTask newTask = new SubTask(name, description, status,
+                                            localDateTime, duration, intId);
                                     taskManager.addTask(newTask);
                                 } else
                                     System.out.print("Ошибка, такого эпика нет");

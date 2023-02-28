@@ -22,7 +22,8 @@ public class SubTask extends Task
         this.parent = parent;
     }
 
-    public SubTask(String name, String description, Status status, LocalDateTime localDateTime, Duration duration, int parent)
+    public SubTask(String name, String description, Status status,
+                   LocalDateTime localDateTime, Duration duration, int parent)
     {
         super(name, description, status, localDateTime, duration);
         this.taskType = TaskTypes.SUBTASK;
@@ -32,7 +33,7 @@ public class SubTask extends Task
     @Override
     public String toString() {
         long s = duration.getSeconds();
-        String durationOutput = String.format("%d:%02d:%02d", s / 3600, (s % 3600) / 60, (s % 60));
+        String durationOutput = String.format("%02d:%02d:%02d", s / 3600, (s % 3600) / 60, (s % 60));
         return "Epic{" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +

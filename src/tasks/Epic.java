@@ -73,7 +73,7 @@ public class Epic extends Task
     @Override
     public String toString() {
         long s = duration.getSeconds();
-        String durationOutput = String.format("%d:%02d:%02d", s / 3600, (s % 3600) / 60, (s % 60));
+        String durationOutput = String.format("%02d:%02d:%02d", s / 3600, (s % 3600) / 60, (s % 60));
         return "Epic{" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +

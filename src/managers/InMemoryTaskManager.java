@@ -239,8 +239,9 @@ public class InMemoryTaskManager extends Managers implements TaskManager
         if(newTask.getName().equals("") || newTask.getStatus() == Status.NONE)
             return;
 
-        Epic newEpic = new Epic(newTask.getName(), newTask.getDescription(), newTask.getStatus());
-        
+        Epic newEpic = new Epic(newTask.getName(), newTask.getDescription(), newTask.getStatus(),
+                newTask.getStartTime(), newTask.getDuration());
+
         allTaskIDs.add(newEpic.getId());
         historyManager.add(newEpic);
         if(!epics.containsKey(newTask.getId()))
