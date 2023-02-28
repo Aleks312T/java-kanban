@@ -64,10 +64,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                 history.append(task.getId()).append(",");
             //Удаляю запятую в конце
             history.deleteCharAt(history.length() - 1);
+            //Конечный ответ
+            result.append(history);
         }
 
-        //Конечный ответ
-        result.append(history);
         try(Writer writer = new FileWriter(saveFile.toFile()))
         {
             writer.write(String.valueOf(result));
@@ -224,8 +224,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     }
 
     @Override
-    public ArrayList<SubTask> findSubTasks(int code) {              //Не добавляю save, потому что ничего не меняется
-        return super.findSubTasks(code);
+    public ArrayList<SubTask> getSubTasks(int code) {              //Не добавляю save, потому что ничего не меняется
+        return super.getSubTasks(code);
     }
 
     @Override

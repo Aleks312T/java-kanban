@@ -1,6 +1,5 @@
 package managers;
 
-import com.sun.source.tree.Tree;
 import tasks.*;
 import main.Status;
 
@@ -43,7 +42,6 @@ public class InMemoryTaskManager extends Managers implements TaskManager
     {
         if(sortedTasks.isEmpty())
         {
-            //sortedTasks.add(task);
             return true;
         }
         else
@@ -82,7 +80,6 @@ public class InMemoryTaskManager extends Managers implements TaskManager
                 return false;
             } else
             {
-                //sortedTasks.add(task);
                 return true;
             }
         }
@@ -260,9 +257,11 @@ public class InMemoryTaskManager extends Managers implements TaskManager
 
     @Override
     public boolean addTask(Task newTask) throws IOException {
+        if(newTask == null)
+            return false;
         if(newTask.getName() == null || newTask.getDescription() == null || newTask.getStatus() == null)
             return false;
-        if(newTask.getName().equals("") || newTask.getStatus() == Status.NONE)
+        if(newTask.getName().equals("") || newTask.getDescription().equals("") ||newTask.getStatus() == Status.NONE)
             return false;
         //Проверка на пересечения
         if(!taskCanBeAdded(newTask))
@@ -292,9 +291,11 @@ public class InMemoryTaskManager extends Managers implements TaskManager
     @Override
     public boolean addTask(Epic newTask) throws IOException                                   //Решил вынести отдельную версию с tasks.Epic
     {
+        if(newTask == null)
+            return false;
         if(newTask.getName() == null || newTask.getDescription() == null || newTask.getStatus() == null)
             return false;
-        if(newTask.getName().equals("") || newTask.getStatus() == Status.NONE)
+        if(newTask.getName().equals("") || newTask.getDescription().equals("") ||newTask.getStatus() == Status.NONE)
             return false;
         //Проверка на пересечения
         if(!taskCanBeAdded(newTask))
@@ -327,9 +328,11 @@ public class InMemoryTaskManager extends Managers implements TaskManager
     @Override
     public boolean addTask(SubTask newTask) throws IOException                                //Решил вынести отдельную версию с tasks.SubTask
     {
+        if(newTask == null)
+            return false;
         if(newTask.getName() == null || newTask.getDescription() == null || newTask.getStatus() == null)
             return false;
-        if(newTask.getName().equals("") || newTask.getStatus() == Status.NONE)
+        if(newTask.getName().equals("") || newTask.getDescription().equals("") ||newTask.getStatus() == Status.NONE)
             return false;
         //Проверка на пересечения
         if(!taskCanBeAdded(newTask))
@@ -401,20 +404,26 @@ public class InMemoryTaskManager extends Managers implements TaskManager
         if(tasks.containsKey(id))
         {
             removeFromList(tasks.get(id));
+            sortedTasks.remove(tasks.get(id));
             allTaskIDs.remove(id);
             tasks.remove(id);
+            historyManager.remove(id);
         } else
         if(epics.containsKey(id))
         {
             removeFromList(epics.get(id));
+            sortedTasks.remove(tasks.get(id));
             allTaskIDs.remove(id);
             epics.remove(id);
+            historyManager.remove(id);
         } else
         if(subTasks.containsKey(id))
         {
             removeFromList(subTasks.get(id));
+            sortedTasks.remove(tasks.get(id));
             allTaskIDs.remove(id);
             subTasks.remove(id);
+            historyManager.remove(id);
         }
     }
     @Override
@@ -428,7 +437,7 @@ public class InMemoryTaskManager extends Managers implements TaskManager
         return epics.containsKey(code);
     }
     @Override
-    public ArrayList <SubTask> findSubTasks(int code)
+    public ArrayList <SubTask> getSubTasks(int code)
     {
         Epic parentEpic = epics.get(code);
         return parentEpic.getSubTasks();

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.SubTask;
+import tasks.Task;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,9 +15,9 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class FileBackedTasksManagerTest extends TaskManagerTest{
     static LocalDateTime testStartTime;
@@ -62,41 +63,94 @@ class FileBackedTasksManagerTest extends TaskManagerTest{
 
         assertTrue(subTasks.size() == 1 && subTasks.contains(subTask1Result));
         taskManager.deleteAllTasks();
+        Set<Integer> setOfTasks = taskManager.allTaskIDs;
+        assertTrue(setOfTasks.isEmpty());
     }
 
     @Test
-    void deleteTask() {
+    void shouldNOTAddTaskCorrectly() throws IOException {
+        taskManager.deleteAllTasks();
+        LocalDateTime localDateTime = LocalDateTime.of(2025, 10, 10, 13, 0);
+        Duration duration = Duration.ofHours(1);
+
+        Epic testEpic = new Epic(null, "EpicDescription", Status.DONE, localDateTime, duration);
+        boolean result = taskManager.addTask(testEpic);
+        assertFalse(result);
+
+        testEpic = new Epic("EpicName", null, Status.DONE, localDateTime, duration);
+        result = taskManager.addTask(testEpic);
+        assertFalse(result);
+
+        testEpic = new Epic("EpicName", "EpicDescription", null, localDateTime, duration);
+        result = taskManager.addTask(testEpic);
+        assertFalse(result);
+
+        testEpic = new Epic("", "EpicDescription", Status.DONE, localDateTime, duration);
+        result = taskManager.addTask(testEpic);
+        assertFalse(result);
+
+        testEpic = new Epic("EpicName", "", Status.DONE, localDateTime, duration);
+        result = taskManager.addTask(testEpic);
+        assertFalse(result);
+
+        testEpic = new Epic("EpicName", "EpicDescription", Status.NONE, localDateTime, duration);
+        result = taskManager.addTask(testEpic);
+        assertFalse(result);
+
+        result = taskManager.addTask((Epic) null);
+        assertFalse(result);
+
+        testEpic = new Epic(null, null, null);
+        result = taskManager.addTask(testEpic);
+        assertFalse(result);
     }
 
     @Test
-    void countEpics() {
+    void shouldDeleteTasksNormally() throws IOException {
+        taskManager.deleteAllTasks();
+        LocalDateTime localDateTime = LocalDateTime.of(2025, 10, 10, 13, 0);
+        Duration duration = Duration.ofHours(1);
+        Task testTask = new Task("EpicName", "EpicDescription", Status.DONE, localDateTime, duration);
+        taskManager.addTask(testTask);
+
+        taskManager.deleteTask(testTask.getId());
+
+        Task resultTask = taskManager.returnTask(testTask.getId());
+        assertNull(resultTask);
+
+        //Удаление несуществующей задачи
+        taskManager.deleteTask(12345);
     }
 
     @Test
-    void containEpic() {
+    void shouldWorkWithEpicsAndSubTasksNormally() throws IOException {
+        taskManager.deleteAllTasks();
+        LocalDateTime localDateTime = LocalDateTime.of(2025, 10, 10, 13, 0);
+        Duration duration = Duration.ofHours(1);
+        Epic testEpic1 = new Epic("EpicName", "EpicDescription", Status.DONE, localDateTime, duration);
+        taskManager.addTask(testEpic1);
+
+        SubTask subTask1 = new SubTask("name1", "description1", Status.NEW,
+                localDateTime.plusDays(1), duration, testEpic1.getId());
+        taskManager.addTask(subTask1);
+        SubTask subTask2 = new SubTask("name2", "description2", Status.DONE,
+                localDateTime.plusDays(2), duration, testEpic1.getId());
+
+        taskManager.addTask(subTask2);
+        Epic testEpic2 = new Epic("EpicName", "EpicDescription", Status.DONE, localDateTime, duration);
+        taskManager.addTask(testEpic2);
+
+        assertEquals(taskManager.countEpics(), 2);
+        assertTrue(taskManager.containEpic(testEpic1.getId()));
+        assertTrue(taskManager.containEpic(testEpic2.getId()));
+
+        ArrayList <SubTask> epic1SubTasks = new ArrayList<>(2);
+        epic1SubTasks.add(subTask1);
+        epic1SubTasks.add(subTask2);
+        ArrayList <SubTask> epic2SubTasks = new ArrayList<>();
+
+        assertEquals(epic1SubTasks, taskManager.getSubTasks(testEpic1.getId()));
+        assertEquals(epic2SubTasks, taskManager.getSubTasks(testEpic2.getId()));
     }
 
-    @Test
-    void findSubTasks() {
-    }
-
-    @Test
-    void printNewTasks() {
-    }
-
-    @Test
-    void printInProgressTasks() {
-    }
-
-    @Test
-    void printDoneTasks() {
-    }
-
-    @Test
-    void deleteAllTasks() {
-    }
-
-    @Test
-    void printAllCodes() {
-    }
 }

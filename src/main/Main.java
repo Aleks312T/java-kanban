@@ -174,7 +174,7 @@ public class Main {
 
                     if(taskManager.containEpic(intId))
                     {
-                        ArrayList <SubTask> result = taskManager.findSubTasks(intId);
+                        ArrayList <SubTask> result = taskManager.getSubTasks(intId);
                         if(result.size() == 0)
                             System.out.print("У данного эпика нет подзадач");
                         else

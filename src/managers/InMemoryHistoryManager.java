@@ -110,6 +110,7 @@ public class InMemoryHistoryManager extends Managers implements HistoryManager
 
     public void clearHistory()
     {
+        historyHashMap.clear();
         customHistory.clearHistory();
     }
 

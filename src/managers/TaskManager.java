@@ -23,7 +23,7 @@ public interface TaskManager
 
     boolean containEpic(int code);
 
-    ArrayList <SubTask> findSubTasks(int code);
+    ArrayList <SubTask> getSubTasks(int code);
 
     void printNewTasks();
 
