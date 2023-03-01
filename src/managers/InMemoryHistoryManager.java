@@ -25,6 +25,8 @@ public class InMemoryHistoryManager extends Managers implements HistoryManager
         private int size = 0;
         protected void linkLast(Task task)
         {
+            if(task == null)
+                return;
             Node<Task> newNode = new Node<>(task);
             if(size == 0)
             {
@@ -67,6 +69,8 @@ public class InMemoryHistoryManager extends Managers implements HistoryManager
 
         protected void removeNode(Node<Task> node)
         {
+            if(node == null)
+                return;
             boolean flagHead = false;
             boolean flagTail = false;
 
@@ -114,6 +118,11 @@ public class InMemoryHistoryManager extends Managers implements HistoryManager
         customHistory.clearHistory();
     }
 
+    public int getCurrentSize()
+    {
+        return customHistory.size;
+    }
+
     @Override
     public int getMaxSize() {
         return maxSize;
@@ -122,6 +131,8 @@ public class InMemoryHistoryManager extends Managers implements HistoryManager
     @Override
     public void add(Task task)
     {
+        if(task == null)
+            return;
         if(customHistory.size == maxSize)
             customHistory.removeNode(customHistory.head);
 

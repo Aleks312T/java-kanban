@@ -51,12 +51,12 @@ class FileBackedTasksManagerTest extends TaskManagerTest{
 
         assertEquals(testEpic, testEpicResult);
 
-        SubTask subTask1 = new SubTask("name1", "description1", Status.NEW,
+        SubTask testSubTask1 = new SubTask("name1", "description1", Status.NEW,
                 localDateTime.plusDays(1), duration, testEpic.getId());
-        taskManager.addTask(subTask1);
-        SubTask subTask1Result = (SubTask) taskManager.returnTask(subTask1.getId());
+        taskManager.addTask(testSubTask1);
+        SubTask subTask1Result = (SubTask) taskManager.returnTask(testSubTask1.getId());
 
-        assertEquals(subTask1, subTask1Result);
+        assertEquals(testSubTask1, subTask1Result);
 
         testEpicResult = (Epic) taskManager.returnTask(testEpic.getId());
         ArrayList<SubTask> subTasks = testEpicResult.getSubTasks();
@@ -140,7 +140,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest{
         Epic testEpic2 = new Epic("EpicName", "EpicDescription", Status.DONE, localDateTime, duration);
         taskManager.addTask(testEpic2);
 
-        assertEquals(taskManager.countEpics(), 2);
+        assertEquals(2, taskManager.countEpics());
         assertTrue(taskManager.containEpic(testEpic1.getId()));
         assertTrue(taskManager.containEpic(testEpic2.getId()));
 
