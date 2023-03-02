@@ -127,7 +127,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest{
         taskManager.deleteAllTasks();
         LocalDateTime localDateTime = LocalDateTime.of(2025, 10, 10, 13, 0);
         Duration duration = Duration.ofHours(1);
-        Epic testEpic1 = new Epic("EpicName", "EpicDescription", Status.DONE, localDateTime, duration);
+        Epic testEpic1 = new Epic("EpicName1", "EpicDescription1", Status.DONE, localDateTime, duration);
         taskManager.addTask(testEpic1);
 
         SubTask subTask1 = new SubTask("name1", "description1", Status.NEW,
@@ -137,7 +137,8 @@ class FileBackedTasksManagerTest extends TaskManagerTest{
                 localDateTime.plusDays(2), duration, testEpic1.getId());
 
         taskManager.addTask(subTask2);
-        Epic testEpic2 = new Epic("EpicName", "EpicDescription", Status.DONE, localDateTime, duration);
+        Epic testEpic2 = new Epic("EpicName2", "EpicDescription2", Status.DONE,
+                localDateTime.plusDays(3), duration);
         taskManager.addTask(testEpic2);
 
         assertEquals(2, taskManager.countEpics());

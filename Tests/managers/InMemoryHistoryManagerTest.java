@@ -46,14 +46,14 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void shouldRemoveHistoryCorrectly() throws IOException {
+    void shouldRemoveHistoryCorrectly() {
         historyManager.clearHistory();
         ArrayList<Task> result = historyManager.getHistory();
         assertEquals(new ArrayList<Task>(), result);
     }
 
     @Test
-    void shouldAddAndRemoveTasksCorrectly() throws IOException {
+    void shouldAddAndRemoveTasksCorrectly() {
         historyManager.clearHistory();
         LocalDateTime localDateTime = LocalDateTime.of(2025, 10, 10, 13, 0);
         Duration duration = Duration.ofHours(1);

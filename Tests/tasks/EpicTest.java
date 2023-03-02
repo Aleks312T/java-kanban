@@ -1,6 +1,7 @@
 package tasks;
 
 import main.Status;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,16 +15,14 @@ import java.util.ArrayList;
 class EpicTest {
 
     static ArrayList<SubTask> subTasks;
-    @BeforeAll
-    public static void beforeAll()
+    @BeforeEach
+    public void beforeEach()
     {
-        //testStartTime = LocalDateTime.now();
         subTasks = new ArrayList<>(5);
     }
 
     @Test
     void shouldHaveInitialStatusTest() {                //Тест a
-        subTasks.clear();
         LocalDateTime localDateTime = LocalDateTime.of(2025, 10, 10, 13, 0);
         Duration duration = Duration.ofHours(1);
         Epic testEpic = new Epic("EpicName", "EpicDescription", Status.DONE, localDateTime, duration);
@@ -34,7 +33,6 @@ class EpicTest {
 
     @Test
     void shouldHaveNewStatusTest() {                    //Тест b
-        subTasks.clear();
         LocalDateTime localDateTime = LocalDateTime.of(2025, 10, 10, 13, 0);
         Duration duration = Duration.ofHours(1);
         Epic testEpic = new Epic("EpicName", "EpicDescription", Status.DONE, localDateTime, duration);
@@ -57,7 +55,6 @@ class EpicTest {
 
     @Test
     void shouldHaveDoneStatusTest() {                    //Тест c
-        subTasks.clear();
         LocalDateTime localDateTime = LocalDateTime.of(2025, 10, 10, 13, 0);
         Duration duration = Duration.ofHours(1);
         Epic testEpic = new Epic("EpicName", "EpicDescription", Status.DONE, localDateTime, duration);
@@ -79,7 +76,6 @@ class EpicTest {
 
     @Test
     void shouldHaveInProgressStatusTest() {                    //Тест d
-        subTasks.clear();
         LocalDateTime localDateTime = LocalDateTime.of(2025, 10, 10, 13, 0);
         Duration duration = Duration.ofHours(1);
         Epic testEpic = new Epic("EpicName", "EpicDescription", Status.DONE, localDateTime, duration);
@@ -101,7 +97,6 @@ class EpicTest {
 
     @Test
     void shouldHaveStatusBasedOnSubTasksTest() {              //Тест e
-        subTasks.clear();
         LocalDateTime localDateTime = LocalDateTime.of(2025, 10, 10, 13, 0);
         Duration duration = Duration.ofHours(1);
         Epic testEpic = new Epic("EpicName", "EpicDescription", Status.DONE, localDateTime, duration);
@@ -127,11 +122,4 @@ class EpicTest {
         assertEquals(subTasks, testEpic.getSubTasks(), "Тест e подзадачи не совпадают с ожидаемыми");
     }
 
-    @AfterAll
-    public static void afterAll()
-    {
-        //testEndTime = LocalDateTime.now();
-        //testDuration = Duration.between(startTime, endTime);
-
-    }
 }
