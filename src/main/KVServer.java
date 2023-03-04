@@ -1,13 +1,15 @@
 package main;
-import static java.nio.charset.StandardCharsets.UTF_8;
+
+import com.google.gson.Gson;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpServer;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Постман: https://www.getpostman.com/collections/a83b61d9e1c81c10575c
@@ -17,6 +19,7 @@ public class KVServer {
     private final String apiToken;
     private final HttpServer server;
     private final Map<String, String> data = new HashMap<>();
+    private final Gson gson = new Gson();
 
     public KVServer() throws IOException {
         apiToken = generateApiToken();
@@ -26,40 +29,73 @@ public class KVServer {
         server.createContext("/load", this::load);
     }
 
-    private void load(HttpExchange h) {
-        // TODO Добавьте получение значения по ключу
+    private void load(HttpExchange h) throws IOException {
+        String requestPath = h.getRequestURI().getPath();
+        String requestMethod = h.getRequestMethod();
+        String[] pathParts = requestPath.split("/");
+        String result = null;
+        if (!hasAuth(h)) {
+            System.out.println("Запрос не авторизован, нужен параметр в query API_TOKEN со значением апи-ключа");
+            h.sendResponseHeaders(403, 0);
+            h.getResponseBody().write("".getBytes());
+        } else
+        if (!"GET".equals(requestMethod)) {
+            System.out.println("/load ждёт GET-запрос, а получил " + h.getRequestMethod());
+            h.sendResponseHeaders(405, 0);
+            h.getResponseBody().write("".getBytes());
+        } else
+        {
+            try
+            {
+                result = data.get(pathParts[2]);
+            } catch (Exception ignored)
+            {
+                System.out.println("Значения с ключом Key " + pathParts[2] + " не найдены!");
+                h.sendResponseHeaders(400, 0);
+                h.getResponseBody().write("".getBytes());
+            }
+            System.out.println("/load выдал: " + result + "\n");
+            this.sendText(h, gson.toJson(result));
+        }
+        h.close();
     }
 
     private void save(HttpExchange h) throws IOException {
+        //Данный метод напичкан таким количество else, потому что при остановке с помощью return
+        //Insomnia не получал ответ, и надо было запрашивать дважды
+        //(В load то же самое)
         try {
             System.out.println("\n/save");
             if (!hasAuth(h)) {
                 System.out.println("Запрос не авторизован, нужен параметр в query API_TOKEN со значением апи-ключа");
                 h.sendResponseHeaders(403, 0);
-                return;
-            }
+            } else
             if ("POST".equals(h.getRequestMethod())) {
                 String key = h.getRequestURI().getPath().substring("/save/".length());
                 if (key.isEmpty()) {
                     System.out.println("Key для сохранения пустой. key указывается в пути: /save/{key}");
                     h.sendResponseHeaders(400, 0);
-                    return;
+                } else
+                {
+                    String value = readText(h);
+                    if (value.isEmpty()) {
+                        System.out.println("Value для сохранения пустой. value указывается в теле запроса");
+                        h.sendResponseHeaders(400, 0);
+                    } else
+                    {
+                        data.put(key, value);
+                        System.out.println("Для ключа " + key + " успешно обновлено значение: " + value);
+                        //System.out.println("Значение для ключа " + key + " успешно обновлено!");
+                        h.sendResponseHeaders(200, 0);
+                    }
                 }
-                String value = readText(h);
-                if (value.isEmpty()) {
-                    System.out.println("Value для сохранения пустой. value указывается в теле запроса");
-                    h.sendResponseHeaders(400, 0);
-                    return;
-                }
-                data.put(key, value);
-                System.out.println("Для ключа " + key + " успешно обновлено значение: " + value);
-                //System.out.println("Значение для ключа " + key + " успешно обновлено!");
-                h.sendResponseHeaders(200, 0);
+
             } else {
                 System.out.println("/save ждёт POST-запрос, а получил: " + h.getRequestMethod());
                 h.sendResponseHeaders(405, 0);
             }
         } finally {
+            System.out.println("h.close()\n");
             h.close();
         }
     }
