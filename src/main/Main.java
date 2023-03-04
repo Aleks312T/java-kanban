@@ -1,5 +1,6 @@
 package main;
 
+import ServerPart.HttpTaskServer;
 import managers.FileBackedTasksManager;
 import tasks.Epic;
 import tasks.SubTask;
@@ -21,10 +22,13 @@ public class Main {
     public static void main(String[] args) throws Exception{
         // Поехали!
         Scanner scanner = new Scanner(System.in);
-        Path saveFile = Paths.get("SaveFile.txt");
+        Path saveFile = Paths.get("SaveFiles/SaveFile.txt");
+        Path httpSaveFile = Paths.get("SaveFiles/httpSaveFile.txt");
         FileBackedTasksManager taskManager = new FileBackedTasksManager(saveFile);
         DateTimeFormatter formatter = taskManager.getFormatter();
         String formatterString = taskManager.getFormatterString();
+
+        HttpTaskServer httpTaskServer = new HttpTaskServer(httpSaveFile);
 
         System.out.println("Приветствую!");
         System.out.println();
@@ -209,12 +213,7 @@ public class Main {
                     System.out.println();
                     break;
                 }
-                case(0):
-                {
-                    exit = 1;
-                    break;
-                }
-                case(11):
+                case(9):
                 {
                     System.out.println("Выбрана команда 1");
                     System.out.println("Введите имя");
@@ -329,6 +328,31 @@ public class Main {
                     }
                     break;
                 }
+                case(0):
+                {
+                    exit = 1;
+                    break;
+                }
+                case(11):
+                {
+
+                    break;
+                }
+                case(12):
+                {
+                    System.out.println("Выбрана команда 12");
+                    System.out.println("Вывести все задачи");
+                    System.out.println();
+                    System.out.println("New задачи:");
+                    httpTaskServer.printNewTasks();
+                    System.out.println();
+                    System.out.println("InProgress задачи:");
+                    httpTaskServer.printInProgressTasks();
+                    System.out.println();
+                    System.out.println("Done задачи:");
+                    httpTaskServer.printDoneTasks();
+                    break;
+                }
                 default:
                     System.out.println("Такой команды нет!");
             }
@@ -354,9 +378,10 @@ public class Main {
             System.out.println("6 - Получение листа задач одного эпика");
             System.out.println("7 - Вывести все идентификаторы задач");
             System.out.println("8 - Вывести историю просмотров задач");
+            System.out.println("9 - Добавление задачи со временем");
             System.out.println("--------------------------------------");
-            System.out.println("11 - Добавление задачи со временем");
-            System.out.println("12 - ");
+            System.out.println("11 - ");
+            System.out.println("12 - Вывод всех задач");
             System.out.println("0 - Выход из программы");
             System.out.print("Введите команду: ");
 

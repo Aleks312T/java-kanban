@@ -59,19 +59,27 @@ public class HttpTaskServer extends FileBackedTasksManager {
                 default:
 
             }
-
         }
 
         public void commonHandleGet(HttpExchange exchange) throws IOException {
+            System.out.println("Вызван метод commonHandleGet\n");
 
+
+            writeResponse(exchange, "Вызван метод commonHandleGet", 200);
         }
 
         public void commonHandlePost(HttpExchange exchange) throws IOException {
+            System.out.println("Вызван метод commonHandlePost\n");
 
+
+            writeResponse(exchange, "Вызван метод commonHandlePost", 200);
         }
 
         public void commonHandleDelete(HttpExchange exchange) throws IOException {
+            System.out.println("Вызван метод commonHandleDelete\n");
 
+
+            writeResponse(exchange, "Вызван метод commonHandleDelete", 200);
         }
         private void writeResponse(HttpExchange exchange,
                                    String responseString,

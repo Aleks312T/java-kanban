@@ -33,7 +33,7 @@ class InMemoryHistoryManagerTest {
     public static void beforeAll()
     {
         testStartTime = LocalDateTime.now();
-        Path saveFile = Paths.get("SaveFileForTest.txt");
+        Path saveFile = Paths.get("SaveFiles/SaveFileForTest.txt");
         historyManager = new InMemoryHistoryManager();
     }
 
