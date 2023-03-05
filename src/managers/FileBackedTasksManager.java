@@ -224,8 +224,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     }
 
     @Override
-    public ArrayList<SubTask> getSubTasks(int code) {              //Не добавляю save, потому что ничего не меняется
-        return super.getSubTasks(code);
+    public ArrayList<SubTask> getSubTasksOfEpic(int code) {              //Не добавляю save, потому что ничего не меняется
+        return super.getSubTasksOfEpic(code);
     }
 
     @Override

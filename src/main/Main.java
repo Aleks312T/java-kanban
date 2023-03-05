@@ -6,7 +6,9 @@ import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
 
+import javax.sound.sampled.Port;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -23,12 +25,11 @@ public class Main {
         // Поехали!
         Scanner scanner = new Scanner(System.in);
         Path saveFile = Paths.get("SaveFiles/SaveFile.txt");
-        Path httpSaveFile = Paths.get("SaveFiles/httpSaveFile.txt");
         FileBackedTasksManager taskManager = new FileBackedTasksManager(saveFile);
         DateTimeFormatter formatter = taskManager.getFormatter();
         String formatterString = taskManager.getFormatterString();
 
-        HttpTaskServer httpTaskServer = new HttpTaskServer(httpSaveFile);
+        HttpTaskServer httpTaskServer = new HttpTaskServer();
 
         System.out.println("Приветствую!");
         System.out.println();
@@ -178,7 +179,7 @@ public class Main {
 
                     if(taskManager.containEpic(intId))
                     {
-                        ArrayList <SubTask> result = taskManager.getSubTasks(intId);
+                        ArrayList <SubTask> result = taskManager.getSubTasksOfEpic(intId);
                         if(result.size() == 0)
                             System.out.print("У данного эпика нет подзадач");
                         else
@@ -341,16 +342,7 @@ public class Main {
                 case(12):
                 {
                     System.out.println("Выбрана команда 12");
-                    System.out.println("Вывести все задачи");
-                    System.out.println();
-                    System.out.println("New задачи:");
-                    httpTaskServer.printNewTasks();
-                    System.out.println();
-                    System.out.println("InProgress задачи:");
-                    httpTaskServer.printInProgressTasks();
-                    System.out.println();
-                    System.out.println("Done задачи:");
-                    httpTaskServer.printDoneTasks();
+
                     break;
                 }
                 default:

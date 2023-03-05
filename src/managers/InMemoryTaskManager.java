@@ -141,6 +141,16 @@ public class InMemoryTaskManager extends Managers implements TaskManager
         return historyManager.getHistory();
     }
 
+    public TreeSet<Task> getSortedTasks()
+    {
+        return sortedTasks;
+    }
+
+    public List<Task> getTasks() { return List.copyOf(tasks.values()); }
+    public List<Task> getEpics() { return List.copyOf(epics.values()); }
+    public List<Task> getSubTasks() { return List.copyOf(subTasks.values()); }
+
+
     public static Status stringToStatus(String input)
     {
         Status result;
@@ -437,11 +447,12 @@ public class InMemoryTaskManager extends Managers implements TaskManager
         return epics.containsKey(code);
     }
     @Override
-    public ArrayList <SubTask> getSubTasks(int code)
+    public ArrayList <SubTask> getSubTasksOfEpic(int code)
     {
         Epic parentEpic = epics.get(code);
         return parentEpic.getSubTasks();
     }
+
     @Override
     public void printNewTasks()                                         //Вывод списка newTasks
     {

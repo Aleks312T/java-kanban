@@ -150,8 +150,8 @@ class FileBackedTasksManagerTest extends TaskManagerTest{
         epic1SubTasks.add(subTask2);
         ArrayList <SubTask> epic2SubTasks = new ArrayList<>();
 
-        assertEquals(epic1SubTasks, taskManager.getSubTasks(testEpic1.getId()));
-        assertEquals(epic2SubTasks, taskManager.getSubTasks(testEpic2.getId()));
+        assertEquals(epic1SubTasks, taskManager.getSubTasksOfEpic(testEpic1.getId()));
+        assertEquals(epic2SubTasks, taskManager.getSubTasksOfEpic(testEpic2.getId()));
     }
 
 }
