@@ -27,20 +27,26 @@ public class KVServer {
         server.createContext("/register", this::register);
         server.createContext("/save", this::save);
         server.createContext("/load", this::load);
+
+        System.out.println("KVServer: Запускаем сервер на порту " + PORT);
+        System.out.println("http://localhost:" + PORT + "/");
+        System.out.println("API_TOKEN: " + apiToken);
+        server.start();                                 // запускаем сервер
     }
 
     private void load(HttpExchange h) throws IOException {
+        System.out.println("KVServer: load | ");
         String requestPath = h.getRequestURI().getPath();
         String requestMethod = h.getRequestMethod();
         String[] pathParts = requestPath.split("/");
         String result = null;
         if (!hasAuth(h)) {
-            System.out.println("Запрос не авторизован, нужен параметр в query API_TOKEN со значением апи-ключа");
+            System.out.println("KVServer: Запрос не авторизован, нужен параметр в query API_TOKEN со значением апи-ключа");
             h.sendResponseHeaders(403, 0);
             h.getResponseBody().write("".getBytes());
         } else
         if (!"GET".equals(requestMethod)) {
-            System.out.println("/load ждёт GET-запрос, а получил " + h.getRequestMethod());
+            System.out.println("KVServer: /load ждёт GET-запрос, а получил " + h.getRequestMethod());
             h.sendResponseHeaders(405, 0);
             h.getResponseBody().write("".getBytes());
         } else
@@ -50,11 +56,11 @@ public class KVServer {
                 result = data.get(pathParts[2]);
             } catch (Exception ignored)
             {
-                System.out.println("Значения с ключом Key " + pathParts[2] + " не найдены!");
+                System.out.println("KVServer: Значения с ключом Key " + pathParts[2] + " не найдены!");
                 h.sendResponseHeaders(400, 0);
                 h.getResponseBody().write("".getBytes());
             }
-            System.out.println("/load выдал: " + result + "\n");
+            System.out.println("KVServer: /load выдал: " + result + "\n");
             this.sendText(h, gson.toJson(result));
         }
         h.close();
@@ -65,44 +71,43 @@ public class KVServer {
         //Insomnia не получал ответ, и надо было запрашивать дважды
         //(В load то же самое)
         try {
-            System.out.println("\n/save");
+            System.out.println("KVServer: save | ");
             if (!hasAuth(h)) {
-                System.out.println("Запрос не авторизован, нужен параметр в query API_TOKEN со значением апи-ключа");
+                System.out.println("KVServer: Запрос не авторизован, нужен параметр в query API_TOKEN со значением апи-ключа");
                 h.sendResponseHeaders(403, 0);
             } else
             if ("POST".equals(h.getRequestMethod())) {
                 String key = h.getRequestURI().getPath().substring("/save/".length());
                 if (key.isEmpty()) {
-                    System.out.println("Key для сохранения пустой. key указывается в пути: /save/{key}");
+                    System.out.println("KVServer: Key для сохранения пустой. key указывается в пути: /save/{key}");
                     h.sendResponseHeaders(400, 0);
                 } else
                 {
                     String value = readText(h);
                     if (value.isEmpty()) {
-                        System.out.println("Value для сохранения пустой. value указывается в теле запроса");
+                        System.out.println("KVServer: Value для сохранения пустой. value указывается в теле запроса");
                         h.sendResponseHeaders(400, 0);
                     } else
                     {
                         data.put(key, value);
-                        System.out.println("Для ключа " + key + " успешно обновлено значение: " + value);
+                        System.out.println("KVServer: Для ключа " + key + " успешно обновлено значение: " + value);
                         //System.out.println("Значение для ключа " + key + " успешно обновлено!");
                         h.sendResponseHeaders(200, 0);
                     }
                 }
 
             } else {
-                System.out.println("/save ждёт POST-запрос, а получил: " + h.getRequestMethod());
+                System.out.println("KVServer: /save ждёт POST-запрос, а получил: " + h.getRequestMethod());
                 h.sendResponseHeaders(405, 0);
             }
         } finally {
-            System.out.println("h.close()\n");
             h.close();
         }
     }
 
     private void register(HttpExchange h) throws IOException {
         try {
-            System.out.println("\n/register");
+            System.out.println("KVServer: register | ");
             if ("GET".equals(h.getRequestMethod())) {
                 sendText(h, apiToken);
             } else {
@@ -112,13 +117,6 @@ public class KVServer {
         } finally {
             h.close();
         }
-    }
-
-    public void start() {
-        System.out.println("Запускаем сервер на порту " + PORT);
-        System.out.println("Открой в браузере http://localhost:" + PORT + "/");
-        System.out.println("API_TOKEN: " + apiToken);
-        server.start();
     }
 
     private String generateApiToken() {

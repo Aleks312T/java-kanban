@@ -27,7 +27,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class HttpTaskServer {
-    private static final int PORT = 8080;
+    private static final int THIS_PORT = 8080;
+    private static final int KV_PORT = 8078;
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
     private static final Gson gson = new Gson();
     HTTPTaskManager httpTaskManager;
@@ -35,13 +36,14 @@ public class HttpTaskServer {
     //Path httpSaveFile = Paths.get("SaveFiles/httpSaveFile.txt");
     public HttpTaskServer() throws IOException {
         HttpServer httpServer = HttpServer.create();
-        httpTaskManager = new HTTPTaskManager("SaveFiles/httpSaveFile.txt");
+        String baseURI = "http://localhost:" + KV_PORT;
+        httpTaskManager = new HTTPTaskManager(baseURI);
 
-        httpServer.bind(new InetSocketAddress(PORT), 0);
+        httpServer.bind(new InetSocketAddress(THIS_PORT), 0);
         httpServer.createContext("/tasks", new TasksHandler());
         httpServer.start(); // запускаем сервер
 
-        System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
+        System.out.println("HttpTaskServer: HTTP-сервер запущен на " + THIS_PORT + " порту!");
 
     }
 
@@ -82,13 +84,13 @@ public class HttpTaskServer {
         }
 
         public void commonHandleGet(HttpExchange exchange) throws IOException {
-            System.out.println("Вызван метод commonHandleGet");
+            System.out.println("HttpTaskServer: Вызван метод commonHandleGet");
             String path = exchange.getRequestURI().getPath();
             String[] pathParts = path.split("/");
             System.out.println(Arrays.toString(pathParts) + "\n");
             Headers requestHeaders = exchange.getRequestHeaders();
             List<String> contentTypeValues = requestHeaders.get("id");
-            String result = null;
+            String result;
             switch (pathParts[2])
             {
                 case "task":
@@ -97,12 +99,11 @@ public class HttpTaskServer {
                         int id = Integer.parseInt(contentTypeFirstValue);
                         Task task = httpTaskManager.returnTask(id);
                         result = gson.toJson(task);
-                        writeResponse(exchange, result, 200);
                     } else
                     {
                         result = gson.toJson(httpTaskManager.getTasks());
-                        writeResponse(exchange, result, 200);
                     }
+                    writeResponse(exchange, result, 200);
                     break;
                 case "subtask":
                     if ((contentTypeValues != null) && !contentTypeValues.isEmpty()) {
@@ -192,15 +193,15 @@ public class HttpTaskServer {
         }
 
         public void commonHandleDelete(HttpExchange exchange) throws IOException {
-            System.out.println("Вызван метод commonHandleDelete\n");
+            System.out.println("HttpTaskServer: Вызван метод commonHandleDelete");
             String path = exchange.getRequestURI().getPath();
             String[] pathParts = path.split("/");
             System.out.println(Arrays.toString(pathParts));
             Headers requestHeaders = exchange.getRequestHeaders();
             List<String> contentTypeValues = requestHeaders.get("id");
-            String result = null;
+            String result;
             if(!pathParts[2].equals("task")) {
-                writeResponse(exchange, gson.toJson("Такого эндпоинта не существует"), 404);
+                writeResponse(exchange, gson.toJson("HttpTaskServer: Такого эндпоинта не существует"), 404);
                 return;
             }
             System.out.println(contentTypeValues + "\n");
@@ -214,11 +215,11 @@ public class HttpTaskServer {
                     if(task != null)
                     {
                         httpTaskManager.deleteTask(id);
-                        result = gson.toJson("Задача успешно удалена");
+                        result = gson.toJson("HttpTaskServer: Задача успешно удалена");
                         writeResponse(exchange, result, 200);
                     } else
                     {
-                        result = gson.toJson("Задачи с таким номером нет!");
+                        result = gson.toJson("HttpTaskServer: Задачи с таким номером нет!");
                         writeResponse(exchange, result, 404);
                     }
                 } catch(Exception exception)
@@ -230,7 +231,7 @@ public class HttpTaskServer {
             } else
             {
                 httpTaskManager.deleteAllTasks();
-                result = gson.toJson("Все задачи успешно удалены");
+                result = gson.toJson("HttpTaskServer: Все задачи успешно удалены");
                 writeResponse(exchange, result, 200);
             }
         }

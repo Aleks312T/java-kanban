@@ -28,7 +28,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest{
     public static void beforeAll()
     {
         testStartTime = LocalDateTime.now();
-        Path saveFile = Paths.get("SaveFiles/SaveFileForTest.txt");
+        String saveFile = "SaveFiles/SaveFileForTest.txt";
         taskManager = new FileBackedTasksManager(saveFile);
     }
 

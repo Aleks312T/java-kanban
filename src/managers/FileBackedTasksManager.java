@@ -8,6 +8,7 @@ import tasks.TaskTypes;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,17 +16,24 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 {
     Path saveFile;
     boolean toSave;
-    public FileBackedTasksManager(Path saveFile) {
+    public FileBackedTasksManager(String saveFile) {
         super();
-        this.saveFile = saveFile;
         this.toSave = false;
 
-        if(Files.exists(saveFile))
-            loadFromFile(saveFile);
-        else
+        //Защита для наследника HTTPTaskManager
+        if(saveFile.contains("http://"))
         {
-            //Надо дописать корректное создание файла сохранения
-            startFile(saveFile);
+            //startFile(Path.of(saveFile));
+        } else
+        {
+            this.saveFile = Paths.get(saveFile);
+            if(Files.exists(this.saveFile))
+                loadFromFile(saveFile);
+            else
+            {
+                //Надо дописать корректное создание файла сохранения
+                startFile(saveFile);
+            }
         }
 
         this.toSave = true;
@@ -77,9 +85,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     }
 
-    protected void loadFromFile(Path path)
+    protected void loadFromFile(String path)
     {
-        try (Reader reader = new FileReader(path.toFile())) {
+        Path currentPath = Paths.get(path);
+        try (Reader reader = new FileReader(currentPath.toFile())) {
             BufferedReader br = new BufferedReader(reader);
             String firstLine = br.readLine();
             if(!br.ready())
@@ -149,10 +158,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         }
     }
 
-    protected void startFile(Path path)
+    protected void startFile(String path)
     {
         System.out.println("Trying create file in " + path + "...");
-        try (PrintWriter writer = new PrintWriter(path.toString())) {
+        try (PrintWriter writer = new PrintWriter(path)) {
 
             System.out.println("Trying to write strings...");
             StringBuilder sb = new StringBuilder();
