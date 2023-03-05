@@ -6,18 +6,24 @@ public class TaskTimeComparator implements Comparator<Task> { // на месте
 
     @Override
     public int compare(Task task1, Task task2) {
+        try
+        {
+            // сравниваем задачи — более поздние должны быть дальше в списке
+            if (task1.getStartTime().isAfter(task2.getStartTime())) {
+                return 1;
 
-        // сравниваем задачи — более поздние должны быть дальше в списке
-        if (task1.getStartTime().isAfter(task2.getStartTime())) {
-            return 1;
+                // более ранние — ближе к началу списка
+            } else if (task1.getStartTime().isBefore(task2.getStartTime())) {
+                return -1;
 
-        // более ранние — ближе к началу списка
-        } else if (task1.getStartTime().isBefore(task2.getStartTime())) {
-            return -1;
-
-        // если в один момент времени, нужно вернуть 0
-        } else {
+                // если в один момент времени, нужно вернуть 0
+            } else {
+                return 0;
+            }
+        } catch(NullPointerException exception)
+        {
             return 0;
         }
+
     }
 }

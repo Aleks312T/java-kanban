@@ -388,7 +388,7 @@ public class InMemoryTaskManager extends Managers implements TaskManager
     @Override
     public Task returnTask(int id)
     {
-        Task result;
+        Task result = null;
         if(tasks.containsKey(id))
         {
             result = tasks.get(id);

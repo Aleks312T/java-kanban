@@ -165,8 +165,7 @@ public class HttpTaskServer {
             {
                 writeResponse(exchange, "Поля комментария не могут быть пустыми", 400);
                 return;
-            }
-            catch (JsonSyntaxException exception)
+            } catch (JsonSyntaxException exception)
             {
                 writeResponse(exchange, "Получен некорректный JSON", 400);
                 return;
@@ -194,9 +193,46 @@ public class HttpTaskServer {
 
         public void commonHandleDelete(HttpExchange exchange) throws IOException {
             System.out.println("Вызван метод commonHandleDelete\n");
-
-
-            writeResponse(exchange, "Вызван метод commonHandleDelete", 200);
+            String path = exchange.getRequestURI().getPath();
+            String[] pathParts = path.split("/");
+            System.out.println(Arrays.toString(pathParts));
+            Headers requestHeaders = exchange.getRequestHeaders();
+            List<String> contentTypeValues = requestHeaders.get("id");
+            String result = null;
+            if(!pathParts[2].equals("task")) {
+                writeResponse(exchange, gson.toJson("Такого эндпоинта не существует"), 404);
+                return;
+            }
+            System.out.println(contentTypeValues + "\n");
+            if ((contentTypeValues != null) && !contentTypeValues.isEmpty())
+            {
+                try
+                {
+                    String contentTypeFirstValue = contentTypeValues.get(0);
+                    int id = Integer.parseInt(contentTypeFirstValue);
+                    Task task = httpTaskManager.returnTask(id);
+                    if(task != null)
+                    {
+                        httpTaskManager.deleteTask(id);
+                        result = gson.toJson("Задача успешно удалена");
+                        writeResponse(exchange, result, 200);
+                    } else
+                    {
+                        result = gson.toJson("Задачи с таким номером нет!");
+                        writeResponse(exchange, result, 404);
+                    }
+                } catch(Exception exception)
+                {
+                    System.out.println(exception);
+                    result = gson.toJson(exception.getMessage());
+                    writeResponse(exchange, result, 501);
+                }
+            } else
+            {
+                httpTaskManager.deleteAllTasks();
+                result = gson.toJson("Все задачи успешно удалены");
+                writeResponse(exchange, result, 200);
+            }
         }
         private void writeResponse(HttpExchange exchange,
                                    String responseString,
