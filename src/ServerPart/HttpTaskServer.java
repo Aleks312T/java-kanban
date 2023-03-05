@@ -11,6 +11,7 @@ import managers.HTTPTaskManager;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
+import tasks.TaskTypes;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,6 +31,7 @@ public class HttpTaskServer {
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
     private static final Gson gson = new Gson();
     HTTPTaskManager httpTaskManager;
+    protected TaskTypes taskType;
     //Path httpSaveFile = Paths.get("SaveFiles/httpSaveFile.txt");
     public HttpTaskServer() throws IOException {
         HttpServer httpServer = HttpServer.create();
@@ -75,7 +77,7 @@ public class HttpTaskServer {
                     commonHandleDelete(exchange);
                     break;
                 default:
-
+                    writeResponse(exchange, gson.toJson("Такого эндпоинта не существует"), 404);
             }
         }
 
@@ -132,15 +134,17 @@ public class HttpTaskServer {
                         Epic epic = (Epic) httpTaskManager.returnTask(id);
                         result = gson.toJson(epic);
                         writeResponse(exchange, result, 200);
-                    }else
+                    } else
                     {
                         result = gson.toJson(httpTaskManager.getEpics());
                         writeResponse(exchange, result, 200);
                     }
                     break;
-
+                default:
+                    result = "Некорректный запрос в типе tasks";
+                    writeResponse(exchange, result, 400);
             }
-            writeResponse(exchange, result, 200);
+
         }
 
         public void commonHandlePost(HttpExchange exchange) throws IOException {
@@ -153,19 +157,39 @@ public class HttpTaskServer {
                 newTask = gson.fromJson(body, Task.class);
                 if(newTask.getName() == null || newTask.getDescription() == null)
                     throw new IOException();
-
+                if(newTask.getTaskType() == null || newTask.getStatus() == null)
+                    throw new IOException();
                 if(newTask.getName().equals("") || newTask.getDescription() .equals(""))
                     throw new IOException();
             } catch (IOException exception)
             {
                 writeResponse(exchange, "Поля комментария не могут быть пустыми", 400);
+                return;
             }
             catch (JsonSyntaxException exception)
             {
                 writeResponse(exchange, "Получен некорректный JSON", 400);
+                return;
+            } catch (Exception exception)
+            {
+                writeResponse(exchange, "Возникла непредвиденная ошибка", 400);
+                return;
             }
-
-            writeResponse(exchange, "Вызван метод commonHandlePost", 200);
+            boolean success;
+            switch (newTask.getTaskType())
+            {
+                case TASK:
+                case EPIC:
+                case SUBTASK:
+                    success = httpTaskManager.addTask(newTask);
+                    break;
+                default:
+                    success = false;
+            }
+            if(success)
+                writeResponse(exchange, "Задача успешно добавлена!", 200);
+            else
+                writeResponse(exchange, "Задача конфликтует с другими по времени", 409);
         }
 
         public void commonHandleDelete(HttpExchange exchange) throws IOException {
