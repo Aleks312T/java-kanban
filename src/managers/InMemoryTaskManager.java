@@ -75,13 +75,7 @@ public class InMemoryTaskManager extends Managers implements TaskManager
                 }
             }
 
-            if(flag == -1)
-            {
-                return false;
-            } else
-            {
-                return true;
-            }
+            return flag != -1;
         }
     }
 

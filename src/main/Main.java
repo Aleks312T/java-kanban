@@ -4,21 +4,18 @@ import ServerPart.HttpTaskServer;
 import ServerPart.KVServer;
 import com.google.gson.Gson;
 import managers.FileBackedTasksManager;
-import managers.HTTPTaskManager;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
-import tasks.TaskTypes;
 
-import javax.sound.sampled.Port;
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.TreeSet;
 
 public class Main {
 
@@ -28,15 +25,10 @@ public class Main {
         KVServer kvServer = new KVServer();
         HttpTaskServer httpTaskServer = new HttpTaskServer();
 
-
         String saveFile = "SaveFiles/SaveFile.txt";
-        String httpSaveFile = "SaveFiles/HTTPSaveFile.txt";
-        String httpURI = "http://localhost:8080";
         FileBackedTasksManager taskManager = new FileBackedTasksManager(saveFile);
         DateTimeFormatter formatter = taskManager.getFormatter();
-        String formatterString = taskManager.getFormatterString();
-
-        //HTTPTaskManager httpTaskManager = new HTTPTaskManager(httpURI);
+        String formatterString = taskManager.getFormatterString();;
 
         System.out.println("Приветствую!");
         System.out.println();
@@ -223,7 +215,7 @@ public class Main {
                 }
                 case(9):
                 {
-                    System.out.println("Выбрана команда 1");
+                    System.out.println("Выбрана команда 9");
                     System.out.println("Введите имя");
                     String name;
                     name = scanner.nextLine();
@@ -336,27 +328,22 @@ public class Main {
                     }
                     break;
                 }
-                case(0):
+                case(10):
                 {
-                    exit = 1;
-                    break;
-                }
-                case(11):
-                {
-                    System.out.println("Выбрана команда 11");
-                    Task task11 = new Task("Task11", "Desc11", Status.DONE);
-                    //httpTaskManager.addTask(task11);
-                    break;
-                }
-                case(12):
-                {
-                    System.out.println("Выбрана команда 12\n");
+                    System.out.println("Выбрана команда 10");
+                    System.out.println("Вывод всех задач в формате json");
                     TreeSet<Task> result = taskManager.getSortedTasks();
                     Gson gson = new Gson();
                     for(Task task : result)
                         System.out.println(gson.toJson(task));
                     break;
                 }
+                case(0):
+                {
+                    exit = 1;
+                    break;
+                }
+
                 default:
                     System.out.println("Такой команды нет!");
             }
@@ -383,9 +370,8 @@ public class Main {
             System.out.println("7 - Вывести все идентификаторы задач");
             System.out.println("8 - Вывести историю просмотров задач");
             System.out.println("9 - Добавление задачи со временем");
+            System.out.println("10 - Вывод всех задач в формате json");
             System.out.println("--------------------------------------");
-            System.out.println("11 - ");
-            System.out.println("12 - Вывод всех задач");
             System.out.println("0 - Выход из программы");
             System.out.print("Введите команду: ");
 

@@ -6,12 +6,10 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import managers.FileBackedTasksManager;
 import managers.HTTPTaskManager;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
-import tasks.TaskTypes;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,12 +17,8 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 public class HttpTaskServer {
     private static final int THIS_PORT = 8080;
@@ -32,8 +26,6 @@ public class HttpTaskServer {
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
     private static final Gson gson = new Gson();
     HTTPTaskManager httpTaskManager;
-    protected TaskTypes taskType;
-    //Path httpSaveFile = Paths.get("SaveFiles/httpSaveFile.txt");
     public HttpTaskServer() throws IOException {
         HttpServer httpServer = HttpServer.create();
         String baseURI = "http://localhost:" + KV_PORT;
@@ -87,7 +79,7 @@ public class HttpTaskServer {
             System.out.println("HttpTaskServer: Вызван метод commonHandleGet");
             String path = exchange.getRequestURI().getPath();
             String[] pathParts = path.split("/");
-            System.out.println(Arrays.toString(pathParts) + "\n");
+            System.out.println(Arrays.toString(pathParts) + System.lineSeparator());
             Headers requestHeaders = exchange.getRequestHeaders();
             List<String> contentTypeValues = requestHeaders.get("id");
             String result;
@@ -107,21 +99,19 @@ public class HttpTaskServer {
                     break;
                 case "subtask":
                     if ((contentTypeValues != null) && !contentTypeValues.isEmpty()) {
+                        String contentTypeFirstValue = contentTypeValues.get(0);
+                        int id = Integer.parseInt(contentTypeFirstValue);
+
                         if(pathParts[3].equals("epic"))
                         {
-                            String contentTypeFirstValue = contentTypeValues.get(0);
-                            int id = Integer.parseInt(contentTypeFirstValue);
                             Epic epic = (Epic) httpTaskManager.returnTask(id);
                             result = gson.toJson(epic.getSubTasks());
-                            writeResponse(exchange, result, 200);
                         } else
                         {
-                            String contentTypeFirstValue = contentTypeValues.get(0);
-                            int id = Integer.parseInt(contentTypeFirstValue);
                             SubTask subTask = (SubTask) httpTaskManager.returnTask(id);
                             result = gson.toJson(subTask);
-                            writeResponse(exchange, result, 200);
                         }
+                        writeResponse(exchange, result, 200);
                     } else
                     {
                         result = gson.toJson(httpTaskManager.getSubTasks());
@@ -149,7 +139,7 @@ public class HttpTaskServer {
         }
 
         public void commonHandlePost(HttpExchange exchange) throws IOException {
-            System.out.println("Вызван метод commonHandlePost\n");
+            System.out.println("Вызван метод commonHandlePost" + System.lineSeparator());
             InputStream inputStream = exchange.getRequestBody();
             String body = new String(inputStream.readAllBytes(), DEFAULT_CHARSET);
             Task newTask = null;
@@ -204,7 +194,7 @@ public class HttpTaskServer {
                 writeResponse(exchange, gson.toJson("HttpTaskServer: Такого эндпоинта не существует"), 404);
                 return;
             }
-            System.out.println(contentTypeValues + "\n");
+            System.out.println(contentTypeValues + System.lineSeparator());
             if ((contentTypeValues != null) && !contentTypeValues.isEmpty())
             {
                 try

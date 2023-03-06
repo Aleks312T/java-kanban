@@ -164,17 +164,16 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         try (PrintWriter writer = new PrintWriter(path)) {
 
             System.out.println("Trying to write strings...");
-            StringBuilder sb = new StringBuilder();
-            sb.append("id,");
-            sb.append("type,");
-            sb.append("name,");
-            sb.append("status,");
-            sb.append("description,");
-            sb.append("startTime,");
-            sb.append("duration,");
-            sb.append("epic");
-            sb.append(System.lineSeparator());
-            writer.write(sb.toString());
+            String sb = "id," +
+                    "type," +
+                    "name," +
+                    "status," +
+                    "description," +
+                    "startTime," +
+                    "duration," +
+                    "epic" +
+                    System.lineSeparator();
+            writer.write(sb);
             writer.close();
             System.out.println("Done!" + System.lineSeparator());
 

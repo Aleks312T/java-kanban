@@ -6,13 +6,7 @@ import tasks.SubTask;
 import tasks.Task;
 import tasks.TaskTypes;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
 
 public class HTTPTaskManager extends FileBackedTasksManager{
@@ -102,7 +96,6 @@ public class HTTPTaskManager extends FileBackedTasksManager{
                         }
                     } else
                     {   //Работа с задачами
-
                         //в data лежат данные по Task
                         switch (taskTypeFromString(data[1]))
                         {

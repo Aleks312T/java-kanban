@@ -1,18 +1,14 @@
 package ClientPart;
-import com.google.gson.*;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpServer;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.HashMap;
-import java.util.Map;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Постман: https://www.getpostman.com/collections/a83b61d9e1c81c10575c
@@ -41,7 +37,6 @@ public class KVTaskClient {
         System.out.println("KVTaskClient: register | ");
         URI tempURI = URI.create(baseURI + "/register" );
         HttpRequest request = HttpRequest.newBuilder().GET().uri(tempURI).build();
-        String result = null;
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             System.out.println(response.statusCode() + " | " + response.body());
@@ -50,11 +45,13 @@ public class KVTaskClient {
                 token = jsonElement.getAsLong();
 
             } else {
-                System.out.println("KVTaskClient: Что-то пошло не так. Сервер вернул код состояния: " + response.statusCode());
+                System.out.println(
+                        "KVTaskClient: Что-то пошло не так. Сервер вернул код состояния: " + response.statusCode());
             }
         } catch (IOException | InterruptedException e) { // обрабатываем ошибки отправки запроса
-            System.out.println("KVTaskClient: Во время выполнения запроса ресурса по url-адресу: '" + uri + "' возникла ошибка.\n" +
-                    "Проверьте, пожалуйста, адрес и повторите попытку.");
+            System.out.println("KVTaskClient: Во время выполнения запроса ресурса по url-адресу: '" +
+                    uri + "' возникла ошибка.");
+            System.out.println("Проверьте, пожалуйста, адрес и повторите попытку.");
         }
     }
 
@@ -65,7 +62,6 @@ public class KVTaskClient {
         URI tempURI = URI.create(baseURI + "/load/" + key + "?API_TOKEN=" + token);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(tempURI)
-                //.header("API_TOKEN", Integer.toString(token))
                 .GET()
                 .build();
         String result = null;
@@ -79,11 +75,14 @@ public class KVTaskClient {
                 System.out.println("Что-то пошло не так. Сервер вернул код состояния: " + response.statusCode());
             }
         } catch (IOException | InterruptedException e) { // обрабатываем ошибки отправки запроса
-            System.out.println("KVTaskClient: Во время выполнения запроса ресурса по url-адресу: '" + uri + "' возникла ввода ошибка.\n" +
-                    "Проверьте, пожалуйста, адрес и повторите попытку.");
+            System.out.println("KVTaskClient: Во время выполнения запроса ресурса по url-адресу: '" +
+                    uri + "' возникла ввода ошибка." + System.lineSeparator());
+            System.out.println("Проверьте, пожалуйста, адрес и повторите попытку.");
         } catch (Exception exception) { // обрабатываем ошибки отправки запроса
-            System.out.println("KVTaskClient: Во время выполнения запроса ресурса по url-адресу: '" + uri + "' возникла неизвестная ошибка.\n" +
-                    "Проверьте, пожалуйста, адрес и повторите попытку.");
+            System.out.println("KVTaskClient: Во время выполнения запроса ресурса по url-адресу: '" +
+                    uri + "' возникла неизвестная ошибка.");
+            System.out.println("Ошибка:" + exception.getMessage());
+            System.out.println("Проверьте, пожалуйста, адрес и повторите попытку.");
         }
 
         return null;
@@ -97,7 +96,6 @@ public class KVTaskClient {
             URI tempURI = URI.create(baseURI + "/save/" + key + "?API_TOKEN=" + token);
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(tempURI)
-                    //.header("API_TOKEN", Integer.toString(token))
                     .POST(HttpRequest.BodyPublishers.ofString(json))
                     .build();
 
@@ -105,8 +103,9 @@ public class KVTaskClient {
             System.out.println("KVTaskClient: Результаты put: " + response.statusCode() + " | " + response.body());
 
         } catch (IOException | InterruptedException e) { // обрабатываем ошибки отправки запроса
-            System.out.println("KVTaskClient: Во время выполнения запроса ресурса по url-адресу: '" + uri + "' возникла ошибка.\n" +
-                    "Проверьте, пожалуйста, адрес и повторите попытку.");
+            System.out.println("KVTaskClient: Во время выполнения запроса ресурса по url-адресу: '" +
+                    uri + "' возникла ввода ошибка." + System.lineSeparator());
+            System.out.println("Проверьте, пожалуйста, адрес и повторите попытку.");
         }
 
     }

@@ -41,7 +41,8 @@ public class KVServer {
         String[] pathParts = requestPath.split("/");
         String result = null;
         if (!hasAuth(h)) {
-            System.out.println("KVServer: Запрос не авторизован, нужен параметр в query API_TOKEN со значением апи-ключа");
+            System.out.println(
+                    "KVServer: Запрос не авторизован, нужен параметр в query API_TOKEN со значением апи-ключа");
             h.sendResponseHeaders(403, 0);
             h.getResponseBody().write("".getBytes());
         } else
@@ -73,7 +74,8 @@ public class KVServer {
         try {
             System.out.println("KVServer: save | ");
             if (!hasAuth(h)) {
-                System.out.println("KVServer: Запрос не авторизован, нужен параметр в query API_TOKEN со значением апи-ключа");
+                System.out.println(
+                        "KVServer: Запрос не авторизован, нужен параметр в query API_TOKEN со значением апи-ключа");
                 h.sendResponseHeaders(403, 0);
             } else
             if ("POST".equals(h.getRequestMethod())) {
@@ -91,7 +93,6 @@ public class KVServer {
                     {
                         data.put(key, value);
                         System.out.println("KVServer: Для ключа " + key + " успешно обновлено значение: " + value);
-                        //System.out.println("Значение для ключа " + key + " успешно обновлено!");
                         h.sendResponseHeaders(200, 0);
                     }
                 }
