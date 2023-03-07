@@ -144,15 +144,38 @@ public class HttpTaskServer {
             InputStream inputStream = exchange.getRequestBody();
             String body = new String(inputStream.readAllBytes(), DEFAULT_CHARSET);
             Task newTask = null;
+            Epic newEpic = null;
+            SubTask newSubTask = null;
+            boolean success;
             try
             {
-                newTask = gson.fromJson(body, Task.class);
-                if(newTask.getName() == null || newTask.getDescription() == null)
+                Task temp = gson.fromJson(body, Task.class);
+                if(temp == null)
                     throw new IOException();
-                if(newTask.getTaskType() == null || newTask.getStatus() == null)
+                if(temp.getName() == null || temp.getDescription() == null)
                     throw new IOException();
-                if(newTask.getName().equals("") || newTask.getDescription() .equals(""))
+                if(temp.getTaskType() == null || temp.getStatus() == null)
                     throw new IOException();
+                if(temp.getName().equals("") || temp.getDescription() .equals(""))
+                    throw new IOException();
+                switch (temp.getTaskType())
+                {
+                    case TASK:
+                        newTask = gson.fromJson(body, Task.class);
+                        success = httpTaskManager.addTask(newTask);
+                        break;
+                    case EPIC:
+                        newEpic = gson.fromJson(body, Epic.class);
+                        success = httpTaskManager.addTask(newEpic);
+                        break;
+                    case SUBTASK:
+                        newSubTask = gson.fromJson(body, SubTask.class);
+                        success = httpTaskManager.addTask(newSubTask);
+                        break;
+                    default:
+                        success = false;
+                }
+
             } catch (IOException exception)
             {
                 writeResponse(exchange, "Поля комментария не могут быть пустыми", 400);
@@ -166,17 +189,7 @@ public class HttpTaskServer {
                 writeResponse(exchange, "Возникла непредвиденная ошибка", 400);
                 return;
             }
-            boolean success;
-            switch (newTask.getTaskType())
-            {
-                case TASK:
-                case EPIC:
-                case SUBTASK:
-                    success = httpTaskManager.addTask(newTask);
-                    break;
-                default:
-                    success = false;
-            }
+
             if(success)
                 writeResponse(exchange, "Задача успешно добавлена!", 200);
             else

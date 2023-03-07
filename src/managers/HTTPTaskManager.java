@@ -96,32 +96,8 @@ public class HTTPTaskManager extends FileBackedTasksManager{
                         }
                     } else
                     {   //Работа с задачами
-                        //в data лежат данные по Task
-                        switch (taskTypeFromString(data[1]))
-                        {
-                            /*Даже костыли нужно переиспользовать, а не копипастить из класса в класс. */
-                            /*Я не понял, что имеется ввиду и что требуется исправить? Если речь идет о том, чтобы вынести
-                            * это действие в отдельный метод, то думаю, пока что это лишнее. Пока они используются 2 раза
-                            * в одном методе (обычном и перегрузке). Более того, я попытался это переделать на простое
-                            * использование taskFromString(line), но типы нормально не приводятся*/
-
-                            //Такие костыли сделаны для того, чтобы типы нормально приводились друг к другу
-                            case TASK:{
-                                Task newTask = taskFromString(line);
-                                this.addTask(newTask);
-                                break;
-                            }
-                            case EPIC:{
-                                Epic newTask = (Epic) taskFromString(line);
-                                this.addTask(newTask);
-                                break;
-                            }
-                            case SUBTASK: {
-                                SubTask newTask = (SubTask) taskFromString(line);
-                                this.addTask(newTask);
-                                break;
-                            }
-                        }
+                        //Вроде починил приведение типов
+                        this.addTask(taskFromString(line));
                     }
                 }
             } else

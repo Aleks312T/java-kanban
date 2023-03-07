@@ -105,29 +105,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                         flag = 1;
                         continue;
                     }
-
-                    String[] data = line.split(",");
-                    //в data лежат данные по Task
-                    switch (taskTypeFromString(data[1]))
-                    {
-                        //Такие костыли сделаны для того, чтобы типы нормально приводились друг к другу
-                        case TASK:{
-                            Task newTask = taskFromString(line);
-                            this.addTask(newTask);
-                            break;
-                        }
-                        case EPIC:{
-                            Epic newTask = (Epic) taskFromString(line);
-                            this.addTask(newTask);
-                            break;
-                        }
-                        case SUBTASK: {
-                            SubTask newTask = (SubTask) taskFromString(line);
-                            this.addTask(newTask);
-                            break;
-                        }
-                    }
-
+                    this.addTask(taskFromString(line));
                 }
                 if(!br.ready())
                 {

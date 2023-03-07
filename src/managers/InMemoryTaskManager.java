@@ -195,6 +195,9 @@ public class InMemoryTaskManager extends Managers implements TaskManager
             return null;
         String[] split = value.split(",");
         Task result;
+        Task newTask = null;
+        Epic newEpic = null;
+        SubTask newSubTask = null;
         if(split.length == 7 || (split.length == 8 && stringToStatus(split[3]) != Status.NONE)) {
             if(!split[5].equals("") && !split[6].equals(""))
             {
@@ -204,38 +207,34 @@ public class InMemoryTaskManager extends Managers implements TaskManager
                 switch (split[1])
                 {
                     case "TASK":
-                        result = new Task(split[2], split[4], stringToStatus(split[3]), localDateTime, duration);
-                        break;
+                        newTask = new Task(split[2], split[4], stringToStatus(split[3]), localDateTime, duration);
+                        return newTask;
                     case "EPIC":
-                        result = new Epic(split[2], split[4], stringToStatus(split[3]), localDateTime, duration);
-                        break;
+                        newEpic = new Epic(split[2], split[4], stringToStatus(split[3]), localDateTime, duration);
+                        return newEpic;
                     case "SUBTASK":
-                        result = new SubTask(split[2], split[4], stringToStatus(split[3]), localDateTime, duration,
+                        newSubTask = new SubTask(split[2], split[4], stringToStatus(split[3]), localDateTime, duration,
                                 Integer.parseInt(split[7]));
-                        break;
-                    default:
-                        result = null;
-                        break;
+                        return newSubTask;
                 }
             } else
                 switch (split[1])
                 {
                     case "TASK":
-                        result = new Task(split[2], split[4], stringToStatus(split[3]));
-                        break;
+                        newTask = new Task(split[2], split[4], stringToStatus(split[3]));
+                        return newTask;
                     case "EPIC":
-                        result = new Epic(split[2], split[4], stringToStatus(split[3]));
-                        break;
+                        newEpic = new Epic(split[2], split[4], stringToStatus(split[3]));
+                        return newEpic;
                     case "SUBTASK":
-                        result = new SubTask(split[2], split[4], stringToStatus(split[3]), Integer.parseInt(split[7]));
-                        break;
-                    default:
-                        result = null;
-                        break;
+                        newSubTask = new SubTask(split[2], split[4], stringToStatus(split[3]),
+                                Integer.parseInt(split[7]));
+                        return newSubTask;
                 }
 
-        } else return null;
-        return result;
+        }
+
+        return null;
     }
 
     protected Task returnTaskWithoutHistory(int id)
