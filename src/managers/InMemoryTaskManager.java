@@ -27,7 +27,7 @@ public class InMemoryTaskManager extends Managers implements TaskManager
     TaskTimeComparator taskTimeComparator = new TaskTimeComparator();
     protected TreeSet<Task> sortedTasks = new TreeSet<>(taskTimeComparator);
 
-    InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
+    InMemoryHistoryManager historyManager = (InMemoryHistoryManager) Managers.getDefaultHistoryManager();
 
     public DateTimeFormatter getFormatter()
     {

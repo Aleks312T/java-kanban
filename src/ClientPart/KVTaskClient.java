@@ -14,13 +14,21 @@ import java.net.http.HttpResponse;
  * Постман: https://www.getpostman.com/collections/a83b61d9e1c81c10575c
  */
 public class KVTaskClient {
-    URI uri;
-    HttpRequest request;
-    HttpClient client;
-    Gson gson;
-    final int port = 8078;
-    final String baseURI = "http://localhost:" + port;
-    long token;
+    public final int port = 8078;
+    public final String baseURI = "http://localhost:" + port;
+    protected URI uri;
+    protected HttpRequest request;
+    protected HttpClient client;
+    protected Gson gson;
+    protected long token;
+
+    public int getPort() {
+        return port;
+    }
+
+    public String getBaseURI() {
+        return baseURI;
+    }
 
     public KVTaskClient() {
         // используем код состояния как часть URL-адреса
@@ -55,6 +63,7 @@ public class KVTaskClient {
         }
     }
 
+    //Метод load работает с эндингом следующего формата:
     //GET /load/<ключ>?API_TOKEN=
     public String load(String key)
     {
@@ -64,7 +73,6 @@ public class KVTaskClient {
                 .uri(tempURI)
                 .GET()
                 .build();
-        String result = null;
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             System.out.println("KVTaskClient: Результаты load: " + response.statusCode() + " | " + response.body());
@@ -88,6 +96,7 @@ public class KVTaskClient {
         return null;
     }
 
+    //Метод put работает с эндингом следующего формата:
     //POST /save/<ключ>?API_TOKEN=
     public void put(String key, String json)
     {

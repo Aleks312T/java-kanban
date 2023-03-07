@@ -37,9 +37,9 @@ class HTTPTaskManagerTest extends TaskManagerTest{
 
     @BeforeAll
     public static void beforeAll() {
-
+        //Перенес порт из теста на 8088
         testStartTime = LocalDateTime.now();
-        String URI = "http://localhost:8078";
+        String URI = "http://localhost:8088";
         taskManager = new HTTPTaskManager(URI);
     }
 

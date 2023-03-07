@@ -1,9 +1,9 @@
 package managers;
 
 public class Managers {
-    public static TaskManager getDefaultTaskManager()
+    public static TaskManager getDefaultTaskManager(String URI)
     {
-        return new InMemoryTaskManager();
+        return new HTTPTaskManager(URI);
     }
 
     public static HistoryManager getDefaultHistoryManager()

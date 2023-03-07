@@ -7,6 +7,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import managers.HTTPTaskManager;
+import managers.Managers;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
@@ -29,7 +30,7 @@ public class HttpTaskServer {
     public HttpTaskServer() throws IOException {
         HttpServer httpServer = HttpServer.create();
         String baseURI = "http://localhost:" + KV_PORT;
-        httpTaskManager = new HTTPTaskManager(baseURI);
+        httpTaskManager = (HTTPTaskManager) Managers.getDefaultTaskManager(baseURI);
 
         httpServer.bind(new InetSocketAddress(THIS_PORT), 0);
         httpServer.createContext("/tasks", new TasksHandler());

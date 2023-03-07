@@ -1,8 +1,7 @@
-package main;
-
 import ServerPart.HttpTaskServer;
 import ServerPart.KVServer;
 import com.google.gson.Gson;
+import main.Status;
 import managers.FileBackedTasksManager;
 import tasks.Epic;
 import tasks.SubTask;
