@@ -14,7 +14,7 @@ import java.net.http.HttpResponse;
  * Постман: https://www.getpostman.com/collections/a83b61d9e1c81c10575c
  */
 public class KVTaskClient {
-    public final int port = 8078;
+    public static final int port = 8078;
     public final String baseURI = "http://localhost:" + port;
     protected URI uri;
     protected HttpRequest request;
